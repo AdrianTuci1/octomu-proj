@@ -11,6 +11,8 @@ import CreateProject from './pages/CreateProject';
 import CreateOrganization from './pages/CreateOrganization';
 import DashboardLayout from './layouts/DashboardLayout';
 import { WorkspaceProvider } from './context/WorkspaceContext';
+import Support from './pages/Support';
+import CreateTicket from './pages/CreateTicket';
 import './App.css';
 
 function App() {
@@ -35,8 +37,10 @@ function App() {
             {/* Shared Routes */}
             <Route path="/settings" element={<Settings />} />
 
-            {/* Placeholder for support page to avoid 404 from header link */}
-            <Route path="/support" element={<div className="p-6">Support Center</div>} />
+            {/* Support Routes */}
+            <Route path="/support" element={<Support />} />
+            <Route path="/support/new" element={<CreateTicket />} />
+
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="*" element={<Navigate to="/projects" replace />} />
           </Route>

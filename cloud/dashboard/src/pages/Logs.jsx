@@ -8,10 +8,12 @@ import {
     Slack,
     Database
 } from 'lucide-react';
+import LogDetailSidebar from '../components/LogDetailSidebar/LogDetailSidebar';
 import './Logs.css';
 
 const Logs = () => {
     const [activeTab, setActiveTab] = useState('Tools');
+    const [selectedLog, setSelectedLog] = useState(null);
 
     const mockLogs = [
         {
@@ -111,7 +113,12 @@ const Logs = () => {
                     </thead>
                     <tbody>
                         {mockLogs.map((log, index) => (
-                            <tr key={index} className={log.error ? 'log-row-error' : ''}>
+                            <tr
+                                key={index}
+                                className={`${log.error ? 'log-row-error' : ''} ${selectedLog === log ? 'row-selected' : ''}`}
+                                onClick={() => setSelectedLog(log)}
+                                style={{ cursor: 'pointer' }}
+                            >
                                 <td>
                                     <div className="timestamp-cell">
                                         {log.error && <div className="status-dot" />}
@@ -142,6 +149,11 @@ const Logs = () => {
                     </tbody>
                 </table>
             </div>
+
+            <LogDetailSidebar
+                log={selectedLog}
+                onClose={() => setSelectedLog(null)}
+            />
         </div>
     );
 };

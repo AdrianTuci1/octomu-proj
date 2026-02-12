@@ -18,7 +18,7 @@ const ProjectSettings = () => {
         <div className="project-settings-page">
             <div className="project-settings-header">
                 <h1 className="project-settings-title">Project Settings</h1>
-                <button className="back-link">
+                <button className="back-link-i">
                     <ArrowLeft size={16} />
                     Go to Org Settings
                 </button>
