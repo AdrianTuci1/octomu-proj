@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Go
+vendor/
+go.sum
+
+# Local Data
+data/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swn

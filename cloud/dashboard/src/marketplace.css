@@ -1,0 +1,423 @@
+/* Marketplace Layout */
+.marketplace-container {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    /* Slightly warmer rich black */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #efefef;
+}
+
+.marketplace-wrapper {
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.marketplace-content {
+    flex: 1;
+    padding: 3rem 0;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    padding: 3rem 2rem 3rem 0;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    background-color: transparent;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.filter-section {
+    margin-bottom: 2.5rem;
+}
+
+.filter-title {
+    font-size: 1.25rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.filter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+/* Slim scrollbar for sidebar */
+.filter-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filter-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.filter-list::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+}
+
+.filter-list::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+    color: #888;
+    font-size: 0.95rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.filter-item:hover {
+    color: #fff;
+    background-color: #1a1a1a;
+}
+
+.filter-item.active {
+    color: #3b82f6;
+    /* Modern Blue */
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Marketplace Header */
+.marketplace-header {
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.marketplace-title h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+    letter-spacing: -0.03em;
+}
+
+.marketplace-title p {
+    color: #888;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.popular-badge-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.star-icon {
+    width: 40px;
+    height: 40px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #333;
+    color: #888;
+}
+
+/* Grid */
+.mcp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 3.5rem 2rem;
+    /* 3.5rem Vertical gap to prevent any overlap perception */
+    padding-bottom: 2rem;
+    text-align: left;
+}
+
+/* MCP Card - Premium Design */
+.mcp-card {
+    background: #121212;
+    border: 1px solid #222;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: auto;
+    /* Use auto height to fit content naturally */
+    min-height: 220px;
+    /* Ensure a minimum size for visual consistency */
+    position: relative;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.mcp-card:hover {
+    border-color: #3b82f6;
+    background: #161616;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.mcp-header {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+}
+
+.mcp-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: #1a1a1a;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #333;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.mcp-icon-wrapper img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.mcp-main-info {
+    flex: 1;
+}
+
+.mcp-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.mcp-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.01em;
+}
+
+.external-link-icon {
+    color: #555;
+    transition: color 0.2s;
+}
+
+.mcp-card:hover .external-link-icon {
+    color: #3b82f6;
+}
+
+.mcp-description {
+    font-size: 0.95rem;
+    color: #999;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.mcp-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    flex-wrap: wrap;
+}
+
+.mcp-tag {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.mcp-tag.verified {
+    border-color: rgba(59, 130, 246, 0.4);
+    color: #3b82f6;
+}
+
+.mcp-platforms {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.platform-tag {
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #888;
+}
+
+.platform-tag.cursor {
+    border-color: #555;
+    color: #fff;
+}
+
+.platform-tag.claude {
+    border-color: #d97706;
+    color: #fbbf24;
+}
+
+/* Amber */
+.platform-tag.windsurf {
+    border-color: #059669;
+    color: #34d399;
+}
+
+/* Emerald */
+
+/* Install Button for Store */
+.mcp-action-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1rem;
+}
+
+.mcp-action-btn:hover {
+    background: #2563eb;
+    transform: scale(1.02);
+}
+
+.mcp-action-btn:disabled {
+    background: #2a2a2a;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 3rem 0;
+}
+
+.pagination-btn {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #222;
+    border-color: #444;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0d0d0d;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 5px;
+    border: 2px solid #0d0d0d;
+}
+
+.category-section {
+    padding-top: 2rem;
+    margin-bottom: 5rem;
+    /* Increased margin between sections */
+    scroll-margin-top: 2rem;
+}
+
+.category-header {
+    margin-bottom: 3.5rem;
+    /* Pushes the grid down significantly */
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #222;
+}
+
+.category-title-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.category-icon-orb {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    border: 1px solid #333;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    /* Accent Color */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+}
+
+.category-text h3 {
+    margin: 0 0 0.25rem 0 !important;
+    text-align: left;
+}
+
+.category-text p {
+    margin: 0 !important;
+}
+
+.marketplace-content {
+    flex: 1;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
+}

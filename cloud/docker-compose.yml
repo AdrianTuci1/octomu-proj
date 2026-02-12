@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # 1. Database (Mock AWS)
+  dynamodb:
+    image: amazon/dynamodb-local
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ."
+
+  # 2. Setup (Create Tables) - Optional, backend does it now, but good to have admin UI
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment:
+      DYNAMO_ENDPOINT: "http://dynamodb:8000"
+      AWS_REGION: "us-east-1"
+      AWS_ACCESS_KEY_ID: "test"
+      AWS_SECRET_ACCESS_KEY: "test"
+    depends_on:
+      - dynamodb
+
+  # 3. Control Plane
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8081:8081" # HTTP
+      - "50051:50051" # gRPC
+    environment:
+      - DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - DYNAMODB_TABLE=octomus-cloud
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - FRONTEND_URL=http://localhost:5173
+    depends_on:
+      - dynamodb
+
+  # 4. Dashboard (Frontend)
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8081
+    depends_on:
+      - backend

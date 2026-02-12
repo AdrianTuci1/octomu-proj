@@ -1,0 +1,202 @@
+.logs-page {
+    margin: 0;
+    text-align: left;
+}
+
+.logs-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--bg-secondary);
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    width: fit-content;
+}
+
+.tab-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.logs-filter-bar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    align-items: stretch;
+}
+
+.add-filters-container {
+    flex: 1;
+    position: relative;
+    max-width: 600px;
+}
+
+.filter-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    pointer-events: none;
+}
+
+.filter-input {
+    width: 100%;
+    height: 100%;
+    padding: 0.625rem 0.75rem 0.625rem 2.25rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    outline: none;
+    box-sizing: border-box;
+}
+
+.filter-input:focus {
+    border-color: var(--text-secondary);
+}
+
+.time-range-select {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.time-range-select:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.refresh-btn {
+    padding: 0 0.75rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.refresh-btn:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* Table Styles */
+.logs-table-container {
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.logs-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logs-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 0.8125rem;
+    font-family: monospace;
+}
+
+.logs-table tr:hover {
+    background-color: var(--bg-secondary);
+}
+
+.log-row-error {
+    background-color: rgba(239, 68, 68, 0.05);
+}
+
+.log-row-error:hover {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+.timestamp-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background-color: #ef4444;
+    /* Red */
+}
+
+.toolkit-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.toolkit-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--text-primary);
+}
+
+.log-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sample-badge {
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    background-color: var(--bg-tertiary);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+}
+
+.response-cell {
+    color: var(--text-tertiary);
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

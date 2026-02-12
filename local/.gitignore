@@ -1,0 +1,20 @@
+# Binaries
+/bin/
+/octomus-local
+/octomus-local.exe
+
+# Environment
+.env
+
+# Data
+data/
+*.db
+*.db-journal
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# OS
+.DS_Store

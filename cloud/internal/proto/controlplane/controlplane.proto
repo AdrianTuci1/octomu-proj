@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package controlplane;
+
+option go_package = "github.com/octomus/cloud/internal/proto/controlplane";
+
+service NodeService {
+  // Node registers itself on startup
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
+  // Bidirectional stream for real-time task assignment and status updates
+  rpc StreamEvents(stream NodeEvent) returns (stream ControlEvent);
+}
+
+message RegisterRequest {
+  string hostname = 1;
+  string ip_address = 2;
+  int32 capacity_cpu = 3;
+  int32 capacity_memory_mb = 4;
+}
+
+message RegisterResponse {
+  string node_id = 1; // UUID assigned by Control Plane
+  bool success = 2;
+}
+
+message NodeEvent {
+  string node_id = 1;
+  oneof event {
+    Heartbeat heartbeat = 2;
+    SessionUpdate session_update = 3;
+  }
+}
+
+message Heartbeat {
+  int32 cpu_usage_percent = 1;
+  int32 memory_usage_mb = 2;
+  int32 active_sessions = 3;
+}
+
+message SessionUpdate {
+  string session_id = 1;
+  string status = 2; // "provisioning", "running", "failed", "completed"
+  string error_message = 3;
+}
+
+message ControlEvent {
+  oneof event {
+    AssignSession assign_session = 1;
+    TerminateSession terminate_session = 2;
+  }
+}
+
+message AssignSession {
+  string session_id = 1;
+  string user_id = 2;
+  bytes mcp_config_json = 3; // JSON config for the MCP server
+  map<string, string> credentials = 4; // Secrets to be injected via MMDS
+}
+
+message TerminateSession {
+  string session_id = 1;
+}
