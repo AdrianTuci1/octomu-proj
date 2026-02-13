@@ -49,15 +49,14 @@ const Header = () => {
 
     const handleOrgSelect = (org) => {
         selectOrg(org.id);
-        navigate('/projects');
-        // Keep dropdown open to allow project selection if needed? 
-        // Or specific behavior: if just switching org, maybe keep open so they can pick project.
-        // For now, let's keep it open.
+        navigate(`/${org.id}/projects`);
     };
 
     const handleProjectSelect = (project) => {
         selectProject(project.id);
-        navigate('/overview');
+        if (currentOrg) {
+            navigate(`/${currentOrg.id}/${project.id}/overview`);
+        }
         setIsDropdownOpen(false);
     };
 
@@ -149,7 +148,11 @@ const Header = () => {
                     label="All Toolkits"
                     onClick={() => navigate('/marketplace')}
                 />
-                <ActionButton icon={<HelpCircle size={14} />} label="Help" />
+                <ActionButton
+                    icon={<HelpCircle size={14} />}
+                    label="Support"
+                    onClick={() => navigate('/support')}
+                />
 
                 {/* Avatar with Context Menu */}
                 <div className="user-menu-container" ref={userMenuRef}>
@@ -163,19 +166,51 @@ const Header = () => {
                             </div>
 
                             <div className="user-menu-section">
-                                <button className="user-menu-item">
+                                <button
+                                    className="user-menu-item"
+                                    onClick={() => {
+                                        if (currentOrg && currentProject) {
+                                            navigate(`/${currentOrg.id}/${currentProject.id}/settings/api-keys`);
+                                        }
+                                        setIsUserMenuOpen(false);
+                                    }}
+                                >
                                     <Key size={14} />
                                     <span>API Keys</span>
                                 </button>
-                                <button className="user-menu-item">
+                                <button
+                                    className="user-menu-item"
+                                    onClick={() => {
+                                        if (currentOrg && currentProject) {
+                                            navigate(`/${currentOrg.id}/${currentProject.id}/settings/general`);
+                                        }
+                                        setIsUserMenuOpen(false);
+                                    }}
+                                >
                                     <Settings size={14} />
                                     <span>Project Settings</span>
                                 </button>
-                                <button className="user-menu-item">
+                                <button
+                                    className="user-menu-item"
+                                    onClick={() => {
+                                        if (currentOrg) {
+                                            navigate(`/${currentOrg.id}/settings/team`);
+                                        }
+                                        setIsUserMenuOpen(false);
+                                    }}
+                                >
                                     <Users size={14} />
                                     <span>Organisation Settings</span>
                                 </button>
-                                <button className="user-menu-item">
+                                <button
+                                    className="user-menu-item"
+                                    onClick={() => {
+                                        if (currentOrg) {
+                                            navigate(`/${currentOrg.id}/settings/billing`);
+                                        }
+                                        setIsUserMenuOpen(false);
+                                    }}
+                                >
                                     <CreditCard size={14} />
                                     <span>Billing</span>
                                 </button>

@@ -11,7 +11,9 @@ const Projects = () => {
 
     const handleProjectClick = (projectId) => {
         selectProject(projectId);
-        navigate('/overview');
+        if (currentOrg) {
+            navigate(`/${currentOrg.id}/${projectId}/overview`);
+        }
     };
 
     if (!currentOrg) return <div>Loading...</div>;

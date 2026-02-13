@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { MoreVertical, Edit2, Copy, RefreshCw, Check, Calendar } from 'lucide-react';
 import { useWorkspace } from '../context/WorkspaceContext';
 import ProjectSettings from './project-settings/ProjectSettings';
@@ -16,7 +17,13 @@ const Settings = () => {
 };
 
 const OrgSettings = () => {
-    const [activeTab, setActiveTab] = useState('team');
+    const { orgId, tab } = useParams();
+    const navigate = useNavigate();
+    const activeTab = tab || 'team';
+
+    const handleTabChange = (newTab) => {
+        navigate(`/${orgId}/settings/${newTab}`);
+    };
 
     return (
         <div className="settings-container">
@@ -26,19 +33,19 @@ const OrgSettings = () => {
                 <div className="tabs-nav">
                     <button
                         className={`tab-link ${activeTab === 'team' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('team')}
+                        onClick={() => handleTabChange('team')}
                     >
                         Team Members
                     </button>
                     <button
                         className={`tab-link ${activeTab === 'general' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('general')}
+                        onClick={() => handleTabChange('general')}
                     >
                         General Settings
                     </button>
                     <button
                         className={`tab-link ${activeTab === 'billing' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('billing')}
+                        onClick={() => handleTabChange('billing')}
                     >
                         Billing
                     </button>

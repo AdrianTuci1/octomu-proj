@@ -23,16 +23,21 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Navigate to="/projects" replace />} />
 
-            {/* Org Level Routes */}
+            {/* Organization Level Routes */}
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/new" element={<CreateProject />} />
             <Route path="/organizations/new" element={<CreateOrganization />} />
+            <Route path="/:orgId/projects" element={<Projects />} />
+            <Route path="/:orgId/settings" element={<Settings />} />
+            <Route path="/:orgId/settings/:tab" element={<Settings />} />
 
             {/* Project Level Routes */}
-            <Route path="/overview" element={<Overview />} />
-            <Route path="/auth-configs" element={<AuthConfigs />} />
-            <Route path="/auth-configs/:id" element={<AuthConfigDetail />} />
-            <Route path="/logs" element={<Logs />} />
+            <Route path="/:orgId/:projectId/overview" element={<Overview />} />
+            <Route path="/:orgId/:projectId/auth-configs" element={<AuthConfigs />} />
+            <Route path="/:orgId/:projectId/auth-configs/:id" element={<AuthConfigDetail />} />
+            <Route path="/:orgId/:projectId/logs" element={<Logs />} />
+            <Route path="/:orgId/:projectId/settings" element={<Settings />} />
+            <Route path="/:orgId/:projectId/settings/:tab" element={<Settings />} />
 
             {/* Shared Routes */}
             <Route path="/settings" element={<Settings />} />
