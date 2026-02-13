@@ -21,6 +21,8 @@ import {
     ArrowUpRight,
     Trash2
 } from 'lucide-react';
+import { useWorkspace } from '../context/WorkspaceContext';
+import { api } from '../services/api.js';
 import CreateAuthConfigSidebar from '../components/CreateAuthConfigSidebar';
 import './AuthConfigs.css';
 
@@ -41,20 +43,33 @@ const ICON_MAP = {
 
 const AuthConfigs = () => {
     const navigate = useNavigate();
+    const { currentOrg, currentProject } = useWorkspace();
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
-    const [configs, setConfigs] = React.useState([
-        {
-            id: 'ac_M_oqfVDa9Yl4',
-            name: 'github-b0iiy6',
-            toolkit: 'GitHub',
-            connections: 1,
-            authType: 'OAUTH2',
-            lastUpdated: 'Feb 11, 2026',
-            status: 'ENABLED'
-        }
-    ]);
-
+    const [configs, setConfigs] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
     const [activeMenu, setActiveMenu] = React.useState(null);
+
+    React.useEffect(() => {
+        const fetchConfigs = async () => {
+            if (currentOrg && currentProject) {
+                setLoading(true);
+                try {
+                    const query = new QueryBuilder()
+                        .where('projectId', currentProject.id)
+                        .build();
+
+                    const data = await api.authConfigs.list(query);
+                    setConfigs(data);
+                } catch (error) {
+                    console.error("Failed to fetch auth configs", error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchConfigs();
+    }, [currentOrg, currentProject]);
 
     React.useEffect(() => {
         const handleClickOutside = (event) => {
@@ -72,6 +87,14 @@ const AuthConfigs = () => {
     const handleCreateConfig = (newConfig) => {
         setConfigs([newConfig, ...configs]);
     };
+
+    if (!currentProject) {
+        return <div className="p-8">Please select a project to view auth configs.</div>;
+    }
+
+    if (loading) {
+        return <div className="p-8">Loading auth configs...</div>;
+    }
 
     return (
         <div className="auth-configs-page">
@@ -132,9 +155,9 @@ const AuthConfigs = () => {
                         </thead>
                         <tbody>
                             {configs.map((config) => {
-                                const IconComponent = ICON_MAP[config.toolkit] || Github;
+                                const IconComponent = ICON_MAP[config.provider] || Github;
                                 return (
-                                    <tr key={config.id} onClick={() => navigate(`/auth-configs/${config.id}`)} style={{ cursor: 'pointer' }}>
+                                    <tr key={config.id} onClick={() => navigate(`/${currentOrg.id}/${currentProject.id}/auth-configs/${config.id}`)} style={{ cursor: 'pointer' }}>
                                         <td>
                                             <div className="config-name-cell">
                                                 <div className="config-icon">
@@ -144,11 +167,11 @@ const AuthConfigs = () => {
                                             </div>
                                         </td>
                                         <td className="id-cell">{config.id}</td>
-                                        <td>{config.connections}</td>
+                                        <td>{config.connections || 0}</td>
                                         <td>
-                                            <span className="badge badge-blue">{config.authType}</span>
+                                            <span className="badge badge-blue">{config.authType || 'OAUTH2'}</span>
                                         </td>
-                                        <td>{config.lastUpdated}</td>
+                                        <td>{config.lastUpdated || 'Just now'}</td>
                                         <td>
                                             <span className="badge badge-green">{config.status}</span>
                                         </td>

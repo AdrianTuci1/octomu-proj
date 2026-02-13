@@ -9,6 +9,8 @@ import {
     Github
 } from 'lucide-react';
 import './AuthConfigDetail.css';
+import { useWorkspace } from '../../context/WorkspaceContext';
+import { api } from '../../services/api.js';
 
 // Import View Components
 import ConnectedAccountsView from './ConnectedAccountsView';
@@ -25,15 +27,26 @@ const AuthConfigDetail = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedAccount, setSelectedAccount] = useState(null);
 
-    // Mock data for the config - in a real app this would be fetched based on id
-    const config = {
-        id: id || 'ac_udBkI_0NjwVG',
-        name: 'mcp_github-ceobxg',
-        toolkit: 'GITHUB',
-        authMethod: 'OAUTH2',
-        createdAt: 'Feb 11, 2026',
-        status: 'ENABLED'
-    };
+    const { currentOrg, currentProject } = useWorkspace();
+    const [config, setConfig] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    React.useEffect(() => {
+        const fetchConfig = async () => {
+            if (currentOrg && currentProject && id) {
+                setLoading(true);
+                try {
+                    const data = await api.authConfigs.get(id);
+                    setConfig(data);
+                } catch (error) {
+                    console.error("Failed to fetch auth config", error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+        fetchConfig();
+    }, [currentOrg, currentProject, id]);
 
     const tabs = [
         { id: 'connected-accounts', label: 'Connected Accounts' },
@@ -47,12 +60,15 @@ const AuthConfigDetail = () => {
         // Could add a toast notification here
     };
 
+    if (loading) return <div className="p-8">Loading...</div>;
+    if (!config) return <div className="p-8">Auth Config not found</div>;
+
     return (
         <div className="auth-config-detail">
             {/* Detail Header */}
             <div className="detail-header">
                 <div className="header-left">
-                    <button className="back-btn" onClick={() => navigate('/auth-configs')}>
+                    <button className="back-btn" onClick={() => navigate(`/${currentOrg.id}/${currentProject.id}/auth-configs`)}>
                         <ChevronLeft size={20} />
                     </button>
                     <div className="config-icon-wrapper">
@@ -128,8 +144,8 @@ const AuthConfigDetail = () => {
                     <div className="sidebar-section">
                         <h4 className="sidebar-label">TOOLKIT SLUG</h4>
                         <div className="copy-field">
-                            <span className="field-value">{config.toolkit}</span>
-                            <button className="copy-icon-btn" onClick={() => copyToClipboard(config.toolkit)}>
+                            <span className="field-value">{config.provider}</span>
+                            <button className="copy-icon-btn" onClick={() => copyToClipboard(config.provider)}>
                                 <Copy size={14} />
                             </button>
                         </div>

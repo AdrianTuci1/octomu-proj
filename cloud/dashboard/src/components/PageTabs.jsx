@@ -5,11 +5,11 @@ import './PageTabs.css';
 
 
 const PageTabs = () => {
-    const { currentProject } = useWorkspace();
+    const { currentOrg, currentProject } = useWorkspace();
     const { orgId, projectId } = useParams();
 
-    // Workaround for when orgId isn't in URL (fall back to project context if available)
-    const effectiveOrgId = orgId || currentProject?.orgId; // Context might need orgId on projects
+    // Fall back to context org if param is missing
+    const effectiveOrgId = orgId || currentOrg?.id || 'default';
 
     return (
         <div className="page-tabs-container">
@@ -17,17 +17,17 @@ const PageTabs = () => {
                 {!currentProject ? (
                     // Org View Tabs
                     <>
-                        <TabItem to={orgId ? `/${orgId}/projects` : "/projects"} label="Projects" />
-                        <TabItem to={orgId ? `/${orgId}/settings/team` : "/settings"} label="Settings" />
+                        <TabItem to={`/${effectiveOrgId}/projects`} label="Projects" />
+                        <TabItem to={`/${effectiveOrgId}/settings/team`} label="Settings" />
                         <TabItem to="/support" label="Support" />
                     </>
                 ) : (
                     // Project View Tabs
                     <>
-                        <TabItem to={`/${orgId}/${projectId}/overview`} label="Overview" />
-                        <TabItem to={`/${orgId}/${projectId}/auth-configs`} label="Auth Configs" />
-                        <TabItem to={`/${orgId}/${projectId}/logs`} label="Logs" />
-                        <TabItem to={`/${orgId}/${projectId}/settings/general`} label="Settings" />
+                        <TabItem to={`/${effectiveOrgId}/${projectId}/overview`} label="Overview" />
+                        <TabItem to={`/${effectiveOrgId}/${projectId}/auth-configs`} label="Auth Configs" />
+                        <TabItem to={`/${effectiveOrgId}/${projectId}/logs`} label="Logs" />
+                        <TabItem to={`/${effectiveOrgId}/${projectId}/settings/general`} label="Settings" />
                     </>
                 )}
             </nav>

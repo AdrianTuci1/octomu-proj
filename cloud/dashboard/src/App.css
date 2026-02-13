@@ -42,3 +42,41 @@
 .read-the-docs {
   color: #888;
 }
+
+.mobile-notice {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+  color: white;
+  z-index: 10000;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 24px;
+  text-align: center;
+  padding: 40px;
+  gap: 20px;
+}
+
+.mobile-notice::before {
+  content: "🖥️";
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 1000px) {
+  .mobile-notice {
+    display: none;
+  }
+}
+
+@media (max-width: 999px) {
+  .app-main-container>*:not(.mobile-notice) {
+    display: none !important;
+  }
+}

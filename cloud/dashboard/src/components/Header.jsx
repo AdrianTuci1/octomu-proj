@@ -67,7 +67,9 @@ const Header = () => {
                 {/* Logo */}
                 <div className="logo-container">
                     <div className="logo-box">
-                        <div className="logo-inner"></div>
+                        <div className="logo-inner">
+                            <img src='/logo.png' alt="Logo" style={{ width: '28px', height: '28px' }} />
+                        </div>
                     </div>
                 </div>
 

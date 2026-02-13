@@ -38,10 +38,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
     background-color: #000000;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .workspace-select-container {
@@ -105,9 +106,42 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
+    /* Blue gradient background */
+    background: linear-gradient(135deg, #66dffa 0%, #023c5b 100%);
     cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    padding: 1px;
+    background: linear-gradient(135deg, #51a9c6, #3a4fd4, #00d2ff);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.user-avatar:hover {
+    transform: scale(1.05);
+}
+
+.user-avatar:hover::after {
+    background: linear-gradient(135deg, #00d2ff, #48DBFB, #0ABDE3);
 }
 
 /* Dropdown Styles */
@@ -261,10 +295,6 @@
     align-items: center;
 }
 
-.user-avatar:hover {
-    border-color: var(--text-secondary);
-    background-color: var(--bg-tertiary);
-}
 
 .user-context-menu {
     position: absolute;
