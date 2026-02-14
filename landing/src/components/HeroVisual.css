@@ -1,0 +1,119 @@
+.hero-visual-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.radial-center {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    padding: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border-color);
+}
+
+.radial-center img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Intermediate Ring (LLMs) */
+.inner-ring-item {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    z-index: 5;
+    transition: transform 0.3s ease;
+}
+
+.inner-ring-item:hover {
+    transform: scale(1.1);
+    border-color: var(--accent-primary);
+}
+
+/* Outer Ring (Apps) */
+.outer-ring-item {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.outer-ring-item:hover {
+    opacity: 1;
+    background: white;
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Connecting Lines */
+.connecting-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.line {
+    stroke: #e2e8f0;
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+    animation: dash 20s linear infinite;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: -100;
+    }
+}
+
+/* Base ring shadows */
+.ring-guide {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed #f1f5f9;
+    pointer-events: none;
+}
+
+.inner-guide {
+    width: 240px;
+    height: 240px;
+}
+
+.outer-guide {
+    width: 440px;
+    height: 440px;
+}

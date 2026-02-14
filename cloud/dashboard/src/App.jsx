@@ -17,7 +17,7 @@ import './App.css';
 
 const AppRoutes = () => {
   const { currentOrg } = useWorkspace();
-  const defaultOrgId = currentOrg?.id || 'org1';
+  const defaultOrgId = currentOrg?.id;
 
   return (
     <Routes>
