@@ -7,6 +7,7 @@ import './MarketplaceView.css';
 interface MarketplaceViewProps {
     registry: IMCPRegistryItem[];
     selectedIntegrationId: string | null;
+    selectedIndex: number;
     setSelectedIntegrationId: (id: string | null) => void;
     connectExtension: (id: string) => void;
     tools: Record<string, any[]>;
@@ -16,6 +17,7 @@ interface MarketplaceViewProps {
 export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
     registry,
     selectedIntegrationId,
+    selectedIndex,
     setSelectedIntegrationId,
     connectExtension,
     tools,
@@ -31,10 +33,11 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
                 </div>
             ) : (
                 <div className="integrations-grid">
-                    {registry.map((app) => (
+                    {registry.map((app, index) => (
                         <IntegrationCard
                             key={app.id}
                             app={app}
+                            isKeyboardFocused={index === selectedIndex}
                             selectedIntegrationId={selectedIntegrationId}
                             setSelectedIntegrationId={setSelectedIntegrationId}
                             renderIcon={renderIcon}
@@ -45,3 +48,4 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
         </div>
     );
 };
+

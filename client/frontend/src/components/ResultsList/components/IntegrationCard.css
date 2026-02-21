@@ -17,6 +17,12 @@
     border-color: rgba(93, 93, 255, 0.2);
 }
 
+.integration-card.keyboard-focused {
+    background: var(--selection-color);
+    border-color: rgba(93, 93, 255, 0.4);
+    outline: none;
+}
+
 .integration-header {
     display: flex;
     align-items: center;

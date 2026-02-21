@@ -52,8 +52,12 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
     };
 
     const onKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Backspace' && query === '' && activeMentions.length > 0) {
-            removeMention(activeMentions[activeMentions.length - 1].id);
+        if (e.key === 'Backspace' && query === '') {
+            if (activeMentions.length > 0) {
+                removeMention(activeMentions[activeMentions.length - 1].id);
+            } else if (currentView !== 'chatHistory') {
+                goBack();
+            }
             return;
         }
 

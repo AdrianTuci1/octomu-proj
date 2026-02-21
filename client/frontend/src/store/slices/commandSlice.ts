@@ -4,74 +4,10 @@ import { ChatService } from '../../services/ChatService';
 import { TerminalService } from '../../services/TerminalService';
 import { MCPRuntimeService } from '../../services/MCPRuntimeService';
 import { IMessage, IResultItem } from '../../domain/types';
+import { DEFAULT_RESULTS } from './resultsData';
 
 export const createCommandSlice: StateCreator<AppState, [], [], CommandSlice> = (set, get) => ({
-    results: [
-        {
-            id: 'walkthrough-1',
-            label: 'Start supercharging your productivity',
-            subtitle: '27% completed',
-            category: 'Welcome to Octomus',
-            type: 'walkthrough',
-            progress: 27,
-            accessory: 'Walkthrough'
-        },
-        // Suggestions
-        {
-            id: 'clip-1',
-            label: 'Clipboard History',
-            subtitle: 'Octomus',
-            category: 'Suggestions',
-            type: 'application',
-            accessory: 'Command'
-        },
-        {
-            id: 'finder-1',
-            label: 'Ask Finder',
-            mention: '@finder',
-            category: 'Suggestions',
-            type: 'ai_extension',
-            accessory: 'AI Extension'
-        },
-        // Connect Your Apps
-        {
-            id: 'slack-conn',
-            label: 'Slack',
-            subtitle: 'Connect to search messages',
-            category: 'Connect Your Apps',
-            type: 'snippet',
-            icon: 'Hash',
-            accessory: 'App'
-        },
-        {
-            id: 'gdrive-conn',
-            label: 'Google Drive',
-            subtitle: 'Connect to search files',
-            category: 'Connect Your Apps',
-            type: 'snippet',
-            icon: 'FileText',
-            accessory: 'App'
-        },
-        // Commands
-        {
-            id: 'browser-1',
-            label: 'Ask Browser',
-            mention: '@browser',
-            category: 'Commands',
-            type: 'ai_extension',
-            accessory: 'AI Extension'
-        },
-        // Marketplace
-        {
-            id: 'mcp-marketplace',
-            label: 'MCP Marketplace',
-            subtitle: 'Browse and authorize MCPs',
-            category: 'Integrations',
-            type: 'snippet',
-            icon: 'Layout',
-            accessory: 'Directory'
-        }
-    ],
+    results: DEFAULT_RESULTS,
     extensions: [
         {
             id: 'ext-llm',
@@ -232,7 +168,7 @@ export const createCommandSlice: StateCreator<AppState, [], [], CommandSlice> = 
     },
 
     handleChatSubmit: async () => {
-        const { query, typingQuery, isChatMode, selectedIndex, results, chatSessions, currentView, showMentions, extensions, addMention } = get();
+        const { query, typingQuery, isChatMode, selectedIndex, results, chatSessions, currentView, showMentions, extensions, addMention, registry } = get();
 
         if (showMentions && selectedIndex >= 0) {
             const lastWord = typingQuery.split(' ').pop() || '';
@@ -248,11 +184,26 @@ export const createCommandSlice: StateCreator<AppState, [], [], CommandSlice> = 
             }
         }
 
+        // Handle Enter in the Marketplace view — open the focused card's detail
+        if (currentView === 'authorizations') {
+            const focusedItem = registry[selectedIndex];
+            if (focusedItem) {
+                set({
+                    selectedIntegrationId: focusedItem.id,
+                    currentView: 'mcpDetail',
+                    selectedIndex: 0
+                });
+            }
+            return;
+        }
+
         if (!isChatMode && currentView === 'chatHistory') {
-            const filteredResults = results.filter(r =>
-                r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
-                r.category.toLowerCase().includes(typingQuery.toLowerCase())
-            );
+            const filteredResults = typingQuery.trim() === ''
+                ? results
+                : results.filter(r =>
+                    r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
+                    r.category.toLowerCase().includes(typingQuery.toLowerCase())
+                );
 
             const selected = filteredResults[selectedIndex];
             if (selected) {

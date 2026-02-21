@@ -112,23 +112,24 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
     },
 
     moveSelectionUp: () => {
-        const { selectedIndex, typingQuery, results, chatSessions, showMentions, extensions } = get();
+        const { selectedIndex, typingQuery, results, chatSessions, showMentions, extensions, currentView, registry } = get();
 
         if (showMentions) {
-            const lastWord = typingQuery.split(' ').pop() || '';
-            const filter = lastWord.startsWith('@') ? lastWord.slice(1).toLowerCase() : '';
-            const filteredExts = extensions.filter(ex =>
-                ex.label.toLowerCase().includes(filter) ||
-                ex.handle.toLowerCase().includes(filter)
-            );
             set({ selectedIndex: Math.max(0, selectedIndex - 1) });
             return;
         }
 
-        const filteredResults = results.filter(r =>
-            r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
-            r.category.toLowerCase().includes(typingQuery.toLowerCase())
-        );
+        if (currentView === 'authorizations') {
+            set({ selectedIndex: Math.max(0, selectedIndex - 1) });
+            return;
+        }
+
+        const filteredResults = typingQuery.trim() === ''
+            ? results
+            : results.filter(r =>
+                r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
+                r.category.toLowerCase().includes(typingQuery.toLowerCase())
+            );
 
         let totalItems = filteredResults.length;
         if (typingQuery.trim() === '') {
@@ -140,7 +141,7 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
     },
 
     moveSelectionDown: () => {
-        const { selectedIndex, typingQuery, results, chatSessions, showMentions, extensions } = get();
+        const { selectedIndex, typingQuery, results, chatSessions, showMentions, extensions, currentView, registry } = get();
 
         if (showMentions) {
             const lastWord = typingQuery.split(' ').pop() || '';
@@ -153,10 +154,17 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
             return;
         }
 
-        const filteredResults = results.filter(r =>
-            r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
-            r.category.toLowerCase().includes(typingQuery.toLowerCase())
-        );
+        if (currentView === 'authorizations') {
+            set({ selectedIndex: Math.min(registry.length - 1, selectedIndex + 1) });
+            return;
+        }
+
+        const filteredResults = typingQuery.trim() === ''
+            ? results
+            : results.filter(r =>
+                r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
+                r.category.toLowerCase().includes(typingQuery.toLowerCase())
+            );
 
         let totalItems = filteredResults.length;
         if (typingQuery.trim() === '') {

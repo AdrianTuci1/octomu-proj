@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { IResultItem } from '../../domain/types';
+import { DEFAULT_RESULTS } from '../../store/slices/resultsData';
 import { ChatView } from './components/ChatView';
 import { HistoryView } from './components/HistoryView';
 import { MarketplaceView } from './components/MarketplaceView';
@@ -45,10 +46,14 @@ export const ResultsList: React.FC = () => {
         }
     }, [selectedIndex]);
 
-    const filteredResults = results.filter((r: IResultItem) =>
-        r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
-        r.category.toLowerCase().includes(typingQuery.toLowerCase())
-    );
+    const activeResults: IResultItem[] = results.length > 0 ? results : DEFAULT_RESULTS;
+
+    const filteredResults = typingQuery.trim() === ''
+        ? activeResults
+        : activeResults.filter((r: IResultItem) =>
+            r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
+            r.category.toLowerCase().includes(typingQuery.toLowerCase())
+        );
 
     const sections: Record<string, IResultItem[]> = {};
     filteredResults.forEach((item: IResultItem) => {
@@ -93,6 +98,7 @@ export const ResultsList: React.FC = () => {
             {currentView === 'authorizations' && (
                 <MarketplaceView
                     registry={registry}
+                    selectedIndex={selectedIndex}
                     selectedIntegrationId={selectedIntegrationId}
                     setSelectedIntegrationId={(id) => {
                         setSelectedIntegrationId(id);

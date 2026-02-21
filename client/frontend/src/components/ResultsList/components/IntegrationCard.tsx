@@ -4,6 +4,7 @@ import './IntegrationCard.css';
 
 interface IntegrationCardProps {
     app: IMCPRegistryItem;
+    isKeyboardFocused?: boolean;
     selectedIntegrationId: string | null;
     setSelectedIntegrationId: (id: string | null) => void;
     renderIcon: (iconName?: string) => React.ReactNode;
@@ -11,6 +12,7 @@ interface IntegrationCardProps {
 
 export const IntegrationCard: React.FC<IntegrationCardProps> = ({
     app,
+    isKeyboardFocused = false,
     selectedIntegrationId,
     setSelectedIntegrationId,
     renderIcon
@@ -19,7 +21,7 @@ export const IntegrationCard: React.FC<IntegrationCardProps> = ({
 
     return (
         <div
-            className={`integration-card ${isSelected ? 'selected' : ''}`}
+            className={`integration-card ${isSelected ? 'selected' : ''} ${isKeyboardFocused ? 'keyboard-focused' : ''}`}
             onClick={() => setSelectedIntegrationId(app.id)}
         >
             <div className="integration-header">
@@ -43,3 +45,4 @@ export const IntegrationCard: React.FC<IntegrationCardProps> = ({
         </div>
     );
 };
+
