@@ -1,0 +1,58 @@
+.interpreter-block {
+    background: rgba(93, 93, 255, 0.1);
+    border: 1px solid var(--accent-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 8px 0;
+}
+
+.interpreter-header {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.command-preview {
+    font-family: monospace;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    word-break: break-all;
+}
+
+.interpreter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-approve,
+.btn-reject {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+}
+
+.btn-approve {
+    background: var(--accent-color);
+    color: white;
+}
+
+.btn-reject {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.btn-approve:hover,
+.btn-reject:hover {
+    opacity: 0.8;
+}

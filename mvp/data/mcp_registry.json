@@ -1,0 +1,46 @@
+[
+    {
+        "id": "exa_search",
+        "label": "Exa Search",
+        "description": "High-quality web search and content crawling for AI models.",
+        "icon": "Search",
+        "image_url": "/images/exa_placeholder.png",
+        "type": "local_binary",
+        "install_cmd": "curl -sSL https://octomus.cloud/binaries/exa-mcp/install.sh | bash",
+        "binary_path": "/Users/adriantucicovenco/Proiecte/octomus/mvp/binaries/exa-mcp/octomus-exa-mcp",
+        "status": "disconnected"
+    },
+    {
+        "id": "everything",
+        "label": "Everything MCP",
+        "description": "A comprehensive MCP server providing all basic tools and resources.",
+        "icon": "Activity",
+        "image_url": "/images/everything_placeholder.png",
+        "type": "local_binary",
+        "install_cmd": "curl -sSL https://octomus.cloud/binaries/everything-mcp/install.sh | bash",
+        "binary_path": "/Users/adriantucicovenco/Proiecte/octomus/mvp/binaries/everything-mcp/octomus-everything-mcp",
+        "status": "disconnected"
+    },
+    {
+        "id": "sequential_thinking",
+        "label": "Sequential Thinking",
+        "description": "Advanced reasoning and sequential step-by-step thinking for the LLM.",
+        "icon": "ListChecks",
+        "image_url": "/images/thinking_placeholder.png",
+        "type": "local_binary",
+        "install_cmd": "curl -sSL https://octomus.cloud/binaries/sequential-mcp/install.sh | bash",
+        "binary_path": "/Users/adriantucicovenco/Proiecte/octomus/mvp/binaries/sequential-mcp/octomus-sequential-mcp",
+        "status": "disconnected"
+    },
+    {
+        "id": "memory",
+        "label": "MCP Memory (SQLite)",
+        "description": "Persistent knowledge storage and context management via SQLite.",
+        "icon": "Brain",
+        "image_url": "/images/memory_placeholder.png",
+        "type": "local_binary",
+        "install_cmd": "curl -sSL https://octomus.cloud/binaries/memory-mcp/install.sh | bash",
+        "binary_path": "/Users/adriantucicovenco/Proiecte/octomus/mvp/binaries/memory-mcp/octomus-memory-mcp",
+        "status": "disconnected"
+    }
+]

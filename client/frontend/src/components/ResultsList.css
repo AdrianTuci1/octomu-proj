@@ -1,0 +1,442 @@
+.results-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.scroll-content {
+    padding: 8px 12px;
+}
+
+/* Section Header */
+.section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 12px 8px 4px 8px;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* List Item Foundation */
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    gap: 12px;
+    transition: all 0.1s ease;
+    min-height: 44px;
+}
+
+.list-item:hover,
+.list-item.active {
+    background: var(--selection-color);
+}
+
+.item-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    opacity: 0.8;
+}
+
+.item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.item-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.item-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-mention {
+    font-size: 13px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.item-subtitle-inline {
+    font-size: 13px;
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.item-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    opacity: 0.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-accessory {
+    font-size: 13px;
+    color: var(--text-secondary);
+    opacity: 0.4;
+    white-space: nowrap;
+}
+
+/* Progress Bar */
+.progress-container {
+    margin-top: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    width: 100%;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent-color);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent-color);
+}
+
+/* Chat View & Messages */
+.chat-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 0;
+}
+
+.message {
+    padding: 8px 16px;
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.msg-bubble {
+    padding: 10px 14px;
+    border-radius: 12px;
+    max-width: 85%;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.message.user {
+    align-items: flex-end;
+}
+
+.message.user .msg-bubble {
+    background: var(--accent-color);
+    color: white;
+}
+
+.message.ai {
+    align-items: flex-start;
+}
+
+.message.ai .msg-bubble {
+    background: var(--selection-color);
+    color: var(--text-primary);
+}
+
+.msg-meta {
+    font-size: 10px;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin-top: 4px;
+    padding: 0 4px;
+}
+
+/* Empty State */
+.chat-empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empty-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.pulsing-icon {
+    color: var(--accent-color);
+    filter: drop-shadow(0 0 10px var(--accent-color));
+    animation: iconPulse 2s infinite ease-in-out;
+}
+
+@keyframes iconPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+.empty-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 12px;
+}
+
+.empty-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 320px;
+}
+
+.highlight {
+    color: var(--accent-color);
+    font-weight: 700;
+    background: rgba(93, 93, 255, 0.1);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.pending-area {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid var(--border-color);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Integrations Marketplace */
+.integrations-view {
+    padding: 16px 20px;
+}
+
+.integrations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    padding-top: 16px;
+}
+
+.integration-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.integration-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(93, 93, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.integration-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.integration-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-color);
+    overflow: hidden;
+}
+
+.app-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.integration-info {
+    flex: 1;
+}
+
+.integration-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.integration-type {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.6;
+}
+
+.status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
+
+.status-badge.disconnected {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+}
+
+.status-badge.connected {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+}
+
+.status-badge.installing {
+    background: rgba(241, 196, 15, 0.15);
+    color: #f1c40f;
+}
+
+.integration-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    opacity: 0.8;
+    min-height: 40px;
+}
+
+/* Tools Discovery */
+.integration-tools {
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tools-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tool-tag {
+    background: rgba(93, 93, 255, 0.1);
+    border: 1px solid rgba(93, 93, 255, 0.2);
+    color: var(--accent-color);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.integration-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: none;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: default;
+    opacity: 0.6;
+}
+
+.install-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.progress-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

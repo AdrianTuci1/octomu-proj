@@ -1,0 +1,53 @@
+package routes
+
+import (
+	"github.com/gin-gonic/gin"
+	"octomus-cloud/handlers"
+)
+
+// SetupRouter initializes the Gin engine and configures all API routes
+func SetupRouter() *gin.Engine {
+	r := gin.Default()
+
+	// Configure CORS for local development
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
+
+	// Serve static files (images, etc.) from the public directory
+	r.Static("/images", "./public/images")
+
+	v1 := r.Group("/v1")
+	{
+		// 1. OAuth Wrapper (Passthrough)
+		auth := v1.Group("/auth")
+		{
+			auth.GET("/start/:provider", handlers.StartOAuth)
+			auth.GET("/callback/:provider", handlers.OAuthCallback)
+		}
+
+		// MCP Discovery & Inspection
+		v1.GET("/mcp/directory", handlers.GetMCPDirectory)
+		v1.GET("/mcp/inspect/:id", handlers.GetMCPTools)
+
+		// LLM Proxy
+
+		// 3. LLM Secure Proxy
+		// Client sends prompts and schemas here. Cloud uses its own LLM API key.
+		chat := v1.Group("/chat")
+		{
+			chat.POST("/", handlers.ProxyLLMChat)
+		}
+	}
+
+	return r
+}
