@@ -1,45 +1,81 @@
 .interpreter-block {
-    background: rgba(93, 93, 255, 0.1);
-    border: 1px solid var(--accent-color);
+    background: rgba(93, 93, 255, 0.05);
+    border: 1px solid rgba(93, 93, 255, 0.2);
     border-radius: 12px;
     padding: 16px;
-    margin: 8px 0;
+    margin: 12px 0;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.interpreter-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
 .interpreter-header {
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
     color: var(--accent-color);
-    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.command-preview {
-    font-family: monospace;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 8px;
-    border-radius: 6px;
-    font-size: 13px;
-    margin-bottom: 12px;
-    word-break: break-all;
+.interpreter-trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
 }
 
-.interpreter-actions {
+.command-preview {
+    font-family: var(--font-mono, 'SF Mono', 'Roboto Mono', monospace);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    word-break: break-all;
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.prompt-char {
+    color: var(--accent-color);
+    margin-right: 8px;
+    user-select: none;
+}
+
+.interpreter-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.interpreter-actions-primary {
     display: flex;
     gap: 8px;
 }
 
 .btn-approve,
+.btn-always,
 .btn-reject {
-    padding: 6px 12px;
+    padding: 8px 16px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     border: none;
-    transition: opacity 0.2s;
+    transition: all 0.2s;
 }
 
 .btn-approve {
@@ -47,12 +83,39 @@
     color: white;
 }
 
-.btn-reject {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
+.btn-always {
+    background: rgba(93, 93, 255, 0.15);
+    color: var(--accent-color);
+    border: 1px solid rgba(93, 93, 255, 0.2);
 }
 
-.btn-approve:hover,
+.btn-reject {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.btn-approve:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.btn-always:hover {
+    background: rgba(93, 93, 255, 0.2);
+}
+
 .btn-reject:hover {
-    opacity: 0.8;
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

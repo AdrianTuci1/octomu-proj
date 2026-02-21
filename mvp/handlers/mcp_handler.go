@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"os"
 
+	"octomus-cloud/models"
+
 	"github.com/gin-gonic/gin"
-	"octomus/mvp/models"
 )
 
 // GetMCPDirectory returns the registry of available MCPs loaded from a JSON file.
@@ -47,18 +48,26 @@ func GetMCPTools(c *gin.Context) {
 	case "exa_search":
 		tools = []gin.H{
 			{
-				"name":        "search",
-				"description": "Perform a powerful search across the web using Exa's neural search engine.",
-				"parameters": gin.H{
-					"query": "string",
-					"num_results": "number",
+				"name":        "web_search_exa",
+				"description": "Search the web for any topic and get clean, ready-to-use content. Best for finding current information, news, facts.",
+				"inputSchema": gin.H{
+					"type": "object",
+					"properties": gin.H{
+						"query":      gin.H{"type": "string", "description": "Web search query"},
+						"numResults": gin.H{"type": "integer", "description": "Number of results (default: 5)"},
+					},
+					"required": []string{"query"},
 				},
 			},
 			{
-				"name":        "get_contents",
-				"description": "Retrieve the cleaned, high-quality content of specific URLs.",
-				"parameters": gin.H{
-					"urls": "array",
+				"name":        "crawling_exa",
+				"description": "Retrieve the cleaned high-quality content of specific URLs.",
+				"inputSchema": gin.H{
+					"type": "object",
+					"properties": gin.H{
+						"urls": gin.H{"type": "array", "description": "List of URLs to crawl"},
+					},
+					"required": []string{"urls"},
 				},
 			},
 		}
@@ -67,33 +76,51 @@ func GetMCPTools(c *gin.Context) {
 			{
 				"name":        "store_knowledge",
 				"description": "Save a new piece of information into the persistent knowledge graph.",
-				"parameters": gin.H{
-					"fact": "string",
-					"entities": "array",
+				"inputSchema": gin.H{
+					"type": "object",
+					"properties": gin.H{
+						"fact":     gin.H{"type": "string", "description": "The fact to store"},
+						"entities": gin.H{"type": "array", "description": "Related entities"},
+					},
+					"required": []string{"fact"},
 				},
 			},
 			{
 				"name":        "query_knowledge",
 				"description": "Retrieve stored facts based on relevance or entity matching.",
-				"parameters": gin.H{
-					"query": "string",
+				"inputSchema": gin.H{
+					"type": "object",
+					"properties": gin.H{
+						"query": gin.H{"type": "string", "description": "Search query"},
+					},
+					"required": []string{"query"},
 				},
 			},
 		}
 	case "everything":
 		tools = []gin.H{
 			{
-				"name": "echo",
+				"name":        "echo",
 				"description": "Simply returns the input provided. Used for testing.",
-				"parameters": gin.H{"message": "string"},
+				"inputSchema": gin.H{
+					"type":       "object",
+					"properties": gin.H{"message": gin.H{"type": "string"}},
+					"required":   []string{"message"},
+				},
 			},
 		}
 	case "sequential_thinking":
 		tools = []gin.H{
 			{
-				"name": "think",
+				"name":        "think",
 				"description": "Break down a complex problem into sequential, logical steps.",
-				"parameters": gin.H{"problem": "string", "steps": "number"},
+				"inputSchema": gin.H{
+					"type": "object",
+					"properties": gin.H{
+						"problem": gin.H{"type": "string", "description": "The problem to think through"},
+					},
+					"required": []string{"problem"},
+				},
 			},
 		}
 	}
@@ -101,5 +128,25 @@ func GetMCPTools(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"mcp_id": mcpID,
 		"tools":  tools,
+	})
+}
+
+// InstallMCP simulates downloading and installing an MCP binary.
+func InstallMCP(c *gin.Context) {
+	mcpID := c.Param("id")
+	log.Printf("[MCP] Installing/Downloading binary for: %s", mcpID)
+
+	// In a real scenario, this would:
+	// 1. Fetch the binary URL from the registry
+	// 2. Download it to a local folder (e.g., ~/.octomus/bin)
+	// 3. Mark the MCP as "ready" in the local state
+
+	// Simulation:
+	log.Printf("[MCP] Successfully installed binary for %s", mcpID)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Binary installed successfully",
+		"mcp_id":  mcpID,
+		"status":  "installed",
 	})
 }

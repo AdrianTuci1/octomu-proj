@@ -23,8 +23,9 @@ func SetupRouter() *gin.Engine {
 		c.Next()
 	})
 
-	// Serve static files (images, etc.) from the public directory
+	// Serve static files (images, binaries, etc.) from the public directory
 	r.Static("/images", "./public/images")
+	r.Static("/binaries", "./binaries")
 
 	v1 := r.Group("/v1")
 	{
@@ -38,6 +39,7 @@ func SetupRouter() *gin.Engine {
 		// MCP Discovery & Inspection
 		v1.GET("/mcp/directory", handlers.GetMCPDirectory)
 		v1.GET("/mcp/inspect/:id", handlers.GetMCPTools)
+		v1.POST("/mcp/install/:id", handlers.InstallMCP)
 
 		// LLM Proxy
 

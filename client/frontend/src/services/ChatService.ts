@@ -1,6 +1,21 @@
 import { IMessage } from '../domain/types';
+import { ApiService } from './ApiService';
 
-export class ChatService {
+export interface IChatRequest {
+    messages: { role: string; content: string }[];
+    tools?: any[];
+}
+
+export interface IChatResponse {
+    role: string;
+    content?: string;
+    tool_call?: {
+        name: string;
+        arguments: any;
+    };
+}
+
+export class ChatService extends ApiService {
     static createUserMessage(content: string): IMessage {
         return {
             id: Date.now().toString(),
@@ -10,16 +25,16 @@ export class ChatService {
         };
     }
 
-    static createAiResponse(query: string): Promise<IMessage> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    id: (Date.now() + 1).toString(),
-                    type: 'ai',
-                    content: `Octomus received: "${query}". How can I help with that?`,
-                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                });
-            }, 1000);
-        });
+    static async proxyChat(messages: IMessage[], tools?: any[]): Promise<IChatResponse> {
+        const payload: IChatRequest = {
+            messages: messages.map(m => {
+                let role: string = m.type === 'user' ? 'user' : 'assistant';
+                if (m.type === 'tool') role = 'tool';
+                return { role, content: m.content };
+            }),
+            tools
+        };
+
+        return this.post<IChatResponse>('/v1/chat/', payload);
     }
 }

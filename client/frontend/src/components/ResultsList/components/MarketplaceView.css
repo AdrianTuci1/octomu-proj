@@ -1,0 +1,10 @@
+.integrations-view {
+    padding: 8px 12px;
+}
+
+.integrations-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 8px;
+}

@@ -10,6 +10,7 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
     isChatMode: false,
     showMentions: false,
     activeMentions: [],
+    selectedIntegrationId: null,
 
     setQuery: (query) => {
         const { results, isChatMode } = get();
@@ -69,7 +70,9 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
 
     goBack: () => {
         const { currentView } = get();
-        if (currentView !== 'chatHistory') {
+        if (currentView === 'mcpDetail') {
+            set({ currentView: 'authorizations' });
+        } else if (currentView !== 'chatHistory') {
             set({
                 currentView: 'chatHistory',
                 isChatMode: false,
@@ -127,15 +130,13 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
             r.category.toLowerCase().includes(typingQuery.toLowerCase())
         );
 
-        let allItems: any[] = [...filteredResults];
+        let totalItems = filteredResults.length;
         if (typingQuery.trim() === '') {
-            allItems = [...allItems, ...chatSessions];
+            totalItems += chatSessions.length;
         }
 
         const newIndex = Math.max(0, selectedIndex - 1);
-        if (allItems[newIndex]) {
-            set({ selectedIndex: newIndex });
-        }
+        set({ selectedIndex: newIndex });
     },
 
     moveSelectionDown: () => {
@@ -157,14 +158,16 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
             r.category.toLowerCase().includes(typingQuery.toLowerCase())
         );
 
-        let allItems: any[] = [...filteredResults];
+        let totalItems = filteredResults.length;
         if (typingQuery.trim() === '') {
-            allItems = [...allItems, ...chatSessions];
+            totalItems += chatSessions.length;
         }
 
-        const newIndex = Math.min(allItems.length - 1, selectedIndex + 1);
-        if (newIndex >= 0 && allItems[newIndex]) {
+        const newIndex = Math.min(totalItems - 1, selectedIndex + 1);
+        if (newIndex >= 0) {
             set({ selectedIndex: newIndex });
         }
-    }
+    },
+
+    setSelectedIntegrationId: (id) => set({ selectedIntegrationId: id })
 });

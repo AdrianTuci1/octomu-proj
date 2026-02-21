@@ -12,5 +12,10 @@ export const createChatSlice: StateCreator<AppState, [], [], ChatSlice> = (set, 
     selectChat: (id) => set({
         currentView: 'main',
         isChatMode: true
+    }),
+
+    resetChat: () => set({
+        conversation: [],
+        results: [] // Also clear results from commandSlice if needed
     })
 });

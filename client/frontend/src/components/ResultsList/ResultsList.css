@@ -1,0 +1,41 @@
+.results-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.scroll-content {
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 12px 8px 4px 8px;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.empty-icon {
+    margin-bottom: 16px;
+    opacity: 0.3;
+}

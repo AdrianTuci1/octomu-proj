@@ -1,12 +1,11 @@
 export type MessageType = 'user' | 'ai' | 'system';
-export type ViewType = 'main' | 'snippets' | 'history' | 'authorizations' | 'chatHistory';
+export type ViewType = 'main' | 'snippets' | 'history' | 'authorizations' | 'chatHistory' | 'mcpDetail';
 
 export interface IMessage {
     id: string;
+    type: 'user' | 'ai' | 'system' | 'tool';
     content: string;
-    type: MessageType;
     timestamp: string;
-    mentionedExtension?: string;
 }
 
 export interface IChatSession {
@@ -37,6 +36,7 @@ export interface ISnippet extends IResultItem { }
 export interface IPendingCommand {
     id: string;
     command: string;
+    args?: any;
     description?: string;
 }
 
@@ -47,14 +47,23 @@ export interface IMCPRegistryItem {
     icon: string;
     type: 'cloud' | 'local_binary' | 'npm_package';
     public_url?: string;
+    download_url?: string;
     image_url?: string;
     install_cmd?: string;
     binary_path?: string;
     status: 'connected' | 'disconnected' | 'installing';
+    auth_type?: 'none' | 'api_key' | 'oauth';
+    auth_config?: {
+        placeholder?: string;
+        help_text?: string;
+        env_var_name?: string;
+    };
+    apiKey?: string;
 }
 
 export interface IMCPTool {
     name: string;
     description: string;
-    parameters: any;
+    inputSchema?: any;   // Standard MCP format from tools/list
+    parameters?: any;    // Legacy / cloud mock format
 }

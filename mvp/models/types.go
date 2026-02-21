@@ -9,12 +9,19 @@ type MCPRegistryItem struct {
 	Type        string `json:"type"` // "cloud", "local_binary", "npm_package"
 	ImageURL    string `json:"image_url,omitempty"`
 	Status      string `json:"status"` // "connected", "disconnected", "installing"
+	AuthType    string `json:"auth_type,omitempty"`
+	AuthConfig  struct {
+		Placeholder string `json:"placeholder,omitempty"`
+		HelpText    string `json:"help_text,omitempty"`
+		EnvVarName  string `json:"env_var_name,omitempty"`
+	} `json:"auth_config,omitempty"`
 	// If Type is "cloud", this is the public URL the Wails client should talk to
 	PublicURL   string `json:"public_url,omitempty"`
 	
 	// If Type is local, these fields tell the Wails client how to install it
 	InstallCmd  string `json:"install_cmd,omitempty"`
 	BinaryPath  string `json:"binary_path,omitempty"`
+	DownloadURL string `json:"download_url,omitempty"`
 }
 
 // ProxiedChatRequest represents a chat request sent from the Wails client to the Cloud

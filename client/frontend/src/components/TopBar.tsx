@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, X } from 'lucide-react';
+import { ChevronLeft, X, RotateCcw } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { MentionsOverlay } from './MentionsOverlay';
 import './TopBar.css';
@@ -24,7 +24,8 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
         goBack,
         toggleChat,
         moveSelectionUp,
-        moveSelectionDown
+        moveSelectionDown,
+        resetChat
     } = useStore();
 
     // Determine if we are currently typing a mention trigger
@@ -145,6 +146,15 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
                     </div>
                 )}
             </div>
+            {isChatMode && (
+                <button
+                    className="reset-chat-button"
+                    onClick={resetChat}
+                    title="Reset Conversation"
+                >
+                    <RotateCcw size={18} />
+                </button>
+            )}
         </div>
     );
 };

@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"octomus/mvp/routes"
+	"octomus-cloud/routes"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8081"
 	}
 
 	r := routes.SetupRouter()

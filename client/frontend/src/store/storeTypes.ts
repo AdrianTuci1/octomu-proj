@@ -18,11 +18,13 @@ export interface UISlice {
     isChatMode: boolean;
     showMentions: boolean;
     activeMentions: IExtension[]; // Added: currently active context chips
+    selectedIntegrationId: string | null;
     setQuery: (query: string) => void;
     setCurrentView: (view: ViewType) => void;
     setIsChatMode: (isChatMode: boolean) => void;
     addMention: (extension: IExtension) => void;
     removeMention: (id: string) => void;
+    setSelectedIntegrationId: (id: string | null) => void;
     goBack: () => void;
     toggleChat: () => void;
     moveSelectionUp: () => void;
@@ -34,24 +36,29 @@ export interface ChatSlice {
     chatSessions: IChatSession[];
     addMessage: (message: IMessage) => void;
     selectChat: (id: string) => void;
+    resetChat: () => void;
 }
 
 export interface CommandSlice {
     results: IResultItem[];
     extensions: IExtension[];
+    allowedTools: string[];
     pendingCommand: IPendingCommand | null;
     setPendingCommand: (command: IPendingCommand | null) => void;
     executeCommand: () => void;
+    allowTool: (name: string) => void;
     rejectCommand: () => void;
-    handleChatSubmit: () => void;
+    handleChatSubmit: () => Promise<void>;
+    handleResultSelection: (item: IResultItem) => void;
 }
 
 export interface ExtensionSlice {
     registry: IMCPRegistryItem[];
     tools: Record<string, IMCPTool[]>;
+    installProgress: Record<string, number>; // Added: id -> percentage
     fetchRegistry: () => Promise<void>;
     fetchTools: (id: string) => Promise<void>;
-    connectExtension: (id: string) => Promise<void>;
+    connectExtension: (id: string, apiKey?: string) => Promise<void>;
 }
 
 export type AppState = UISlice & ChatSlice & CommandSlice & ExtensionSlice;

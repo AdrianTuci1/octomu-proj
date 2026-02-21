@@ -11,6 +11,7 @@ function App() {
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
+        // Load registry on startup. Tools are fetched fresh on every LLM call.
         fetchRegistry();
     }, [fetchRegistry]);
 

@@ -1,0 +1,216 @@
+.integration-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+.integration-card:hover,
+.integration-card.selected {
+    background: var(--selection-color);
+}
+
+.integration-card.selected {
+    border-color: rgba(93, 93, 255, 0.2);
+}
+
+.integration-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    gap: 12px;
+    min-height: 44px;
+}
+
+.integration-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    opacity: 0.8;
+}
+
+.app-image {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.integration-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+}
+
+.integration-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.integration-type {
+    font-size: 12px;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.status-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.status-badge.disconnected {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+.status-badge.connected {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+}
+
+.status-badge.installing {
+    background: rgba(241, 196, 15, 0.1);
+    color: #f1c40f;
+}
+
+.integration-content-wrapper {
+    padding: 0 12px 12px 48px;
+}
+
+.integration-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    opacity: 0.7;
+    margin-bottom: 12px;
+}
+
+.integration-options-panel {
+    animation: slideDown 0.2s ease-out;
+}
+
+.options-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 8px 0;
+    opacity: 0.3;
+}
+
+.integration-tools {
+    margin-bottom: 12px;
+}
+
+.tools-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tool-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.integration-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1);
+}
+
+.btn-primary.full-width {
+    flex: 1;
+}
+
+.install-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.progress-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.connected-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #2ecc71;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
