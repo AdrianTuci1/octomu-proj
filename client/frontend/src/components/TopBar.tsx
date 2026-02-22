@@ -134,21 +134,28 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
                             ref={inputRef}
                             type="text"
                             className="search-input"
-                            placeholder={isChatMode ? (activeMentions.length > 0 || isTypingMention ? "" : "Ask Octomus anything...") : "Search for apps and commands..."}
-                            value={isTypingMention ? lastWord : query} // Keep typing visible if needed, or hide it
+                            placeholder={isChatMode ? "Ask Octomus anything..." : "Search for apps and commands..."}
+                            value={isTypingMention ? lastWord : query}
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={onKeyDown}
                             style={isTypingMention ? { opacity: 0, position: 'absolute', width: '1px' } : {}}
                         />
+
                     </div>
                 </div>
 
-                {!isChatMode && (
+                {!isChatMode ? (
                     <div className="tab-hint-outer" onClick={toggleChat}>
                         <span className="hint-text">Ask AI</span>
                         <div className="hint-key">Tab</div>
                     </div>
+                ) : (
+                    <div className="tab-hint-outer active" onClick={toggleChat}>
+                        <span className="hint-text">Search</span>
+                        <div className="hint-key">Tab</div>
+                    </div>
                 )}
+
             </div>
             {isChatMode && (
                 <button

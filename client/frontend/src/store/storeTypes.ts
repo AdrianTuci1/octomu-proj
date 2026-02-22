@@ -44,6 +44,7 @@ export interface CommandSlice {
     extensions: IExtension[];
     allowedTools: string[];
     pendingCommand: IPendingCommand | null;
+    sessionArtifacts: any[]; // Technical schemas 'pinned' to the session
     setPendingCommand: (command: IPendingCommand | null) => void;
     executeCommand: () => void;
     allowTool: (name: string) => void;
@@ -55,10 +56,14 @@ export interface CommandSlice {
 export interface ExtensionSlice {
     registry: IMCPRegistryItem[];
     tools: Record<string, IMCPTool[]>;
+    fetchingTools: Record<string, boolean>; // Added: id -> true if currently fetching
+    toolFetchErrors: Record<string, string | null>; // Added: id -> error message if failed
     installProgress: Record<string, number>; // Added: id -> percentage
     fetchRegistry: () => Promise<void>;
     fetchTools: (id: string) => Promise<void>;
     connectExtension: (id: string, apiKey?: string) => Promise<void>;
+    disconnectExtension: (id: string) => Promise<void>;
 }
+
 
 export type AppState = UISlice & ChatSlice & CommandSlice & ExtensionSlice;

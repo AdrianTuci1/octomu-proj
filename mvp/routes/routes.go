@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"octomus-cloud/handlers"
+
+	"github.com/gin-gonic/gin"
 )
 
 // SetupRouter initializes the Gin engine and configures all API routes
@@ -34,6 +35,12 @@ func SetupRouter() *gin.Engine {
 		{
 			auth.GET("/start/:provider", handlers.StartOAuth)
 			auth.GET("/callback/:provider", handlers.OAuthCallback)
+		}
+
+		// 2. OAuth Token Exchange (cloud holds Client Secret; returns token to client for Keychain storage)
+		oauth := v1.Group("/oauth")
+		{
+			oauth.POST("/exchange/:provider", handlers.ExchangeToken)
 		}
 
 		// MCP Discovery & Inspection

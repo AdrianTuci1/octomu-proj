@@ -20,11 +20,15 @@ export const ResultsList: React.FC = () => {
         pendingCommand,
         registry,
         tools,
+        fetchingTools,
+        toolFetchErrors,
         executeCommand,
         rejectCommand,
         selectChat,
         connectExtension,
+        disconnectExtension,
         selectedIntegrationId,
+
         setSelectedIntegrationId,
         handleResultSelection,
         fetchTools,
@@ -121,11 +125,15 @@ export const ResultsList: React.FC = () => {
                         status: 'disconnected'
                     } as any}
                     tools={tools[selectedIntegrationId] || []}
+                    fetchingTools={fetchingTools}
+                    toolFetchErrors={toolFetchErrors}
                     connectExtension={connectExtension}
+                    disconnectExtension={disconnectExtension}
                     fetchTools={fetchTools}
                     renderIcon={renderIcon}
                     installProgress={installProgress}
                 />
+
             )}
         </div>
     );

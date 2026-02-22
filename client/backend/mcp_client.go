@@ -15,20 +15,13 @@ type JSONRPCRequest struct {
 	JSONRPC string `json:"jsonrpc"`
 	Method  string `json:"method"`
 	Params  any    `json:"params,omitempty"`
-	ID      int64  `json:"id"`
-}
-
-// JSONRPCNotification represents a JSON-RPC 2.0 notification
-type JSONRPCNotification struct {
-	JSONRPC string `json:"jsonrpc"`
-	Method  string `json:"method"`
-	Params  any    `json:"params,omitempty"`
+	ID      any    `json:"id,omitempty"` // ID can be string, number, or null. Omit for notifications.
 }
 
 // JSONRPCResponse represents a JSON-RPC 2.0 response
 type JSONRPCResponse struct {
 	JSONRPC string          `json:"jsonrpc"`
-	ID      int64           `json:"id"`
+	ID      any             `json:"id"`
 	Result  json.RawMessage `json:"result,omitempty"`
 	Error   *JSONRPCError   `json:"error,omitempty"`
 }
@@ -136,7 +129,7 @@ func (c *MCPClient) SendRequest(method string, params any) (*JSONRPCResponse, er
 			continue
 		}
 
-		if resp.ID == id {
+		if fmt.Sprintf("%v", resp.ID) == fmt.Sprintf("%v", id) {
 			return &resp, nil
 		}
 	}
@@ -150,7 +143,7 @@ func (c *MCPClient) SendRequest(method string, params any) (*JSONRPCResponse, er
 
 // SendNotification sends a JSON-RPC notification (no response expected)
 func (c *MCPClient) SendNotification(method string, params any) error {
-	req := JSONRPCNotification{
+	req := JSONRPCRequest{
 		JSONRPC: "2.0",
 		Method:  method,
 		Params:  params,

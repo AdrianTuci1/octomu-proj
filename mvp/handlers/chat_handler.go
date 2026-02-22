@@ -136,7 +136,9 @@ func ProxyLLMChat(c *gin.Context) {
 						}
 					}
 
-					genaiSchema.Properties[k] = propSchema
+					// Sanitize property name (Gemini doesn't like hyphens)
+					cleanK := strings.ReplaceAll(k, "-", "_")
+					genaiSchema.Properties[cleanK] = propSchema
 				}
 			}
 
@@ -144,7 +146,8 @@ func ProxyLLMChat(c *gin.Context) {
 			if reqs, ok := schemaSource["required"].([]interface{}); ok {
 				for _, r := range reqs {
 					if rs, ok := r.(string); ok {
-						genaiSchema.Required = append(genaiSchema.Required, rs)
+						cleanR := strings.ReplaceAll(rs, "-", "_")
+						genaiSchema.Required = append(genaiSchema.Required, cleanR)
 					}
 				}
 			}

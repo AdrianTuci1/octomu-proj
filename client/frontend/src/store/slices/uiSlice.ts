@@ -89,19 +89,23 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
     toggleChat: () => {
         const { isChatMode } = get();
         if (isChatMode) {
+            // Switching from Chat to Search
             set({
                 isChatMode: false,
                 currentView: 'chatHistory',
                 selectedIndex: 0,
                 query: '',
                 typingQuery: '',
+                suggestion: '',
                 showMentions: false,
                 activeMentions: []
             });
         } else {
+            // Switching from Search to Chat
             set({
                 isChatMode: true,
                 currentView: 'main',
+                selectedIndex: 0,
                 query: '',
                 typingQuery: '',
                 suggestion: '',
@@ -110,6 +114,7 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
             });
         }
     },
+
 
     moveSelectionUp: () => {
         const { selectedIndex, typingQuery, results, chatSessions, showMentions, extensions, currentView, registry } = get();

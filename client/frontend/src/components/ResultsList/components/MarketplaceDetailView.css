@@ -9,10 +9,100 @@
 
 .mcp-detail-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 16px;
     margin-bottom: 8px;
 }
+
+.mcp-detail-header-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.mcp-header-actions-group {
+    display: flex;
+    align-items: center;
+}
+
+.disconnect-confirm-bubble {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 93, 93, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 93, 93, 0.2);
+    font-size: 11px;
+    color: #ff5d5d;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-confirm-yes,
+.btn-confirm-no {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid rgba(255, 93, 93, 0.3);
+    transition: all 0.2s;
+}
+
+.btn-confirm-yes {
+    background: #ff5d5d;
+    color: white;
+}
+
+.btn-confirm-no {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+}
+
+.btn-confirm-yes:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.btn-confirm-no:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-disconnect-header {
+
+    background: rgba(255, 93, 93, 0.1);
+    color: #ff5d5d;
+    border: 1px solid rgba(255, 93, 93, 0.2);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.btn-disconnect-header:hover {
+    background: #ff5d5d;
+    color: white;
+    transform: translateY(-1px);
+}
+
 
 .mcp-detail-icon {
     width: 48px;
@@ -136,6 +226,41 @@
     line-height: 1.4;
 }
 
+.mcp-tools-loading,
+.mcp-no-tools {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--border-color);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    gap: 12px;
+}
+
+.mcp-no-tools.error {
+    background: rgba(255, 93, 93, 0.05);
+    border: 1px solid rgba(255, 93, 93, 0.2);
+    color: #ff5d5d;
+}
+
+.mcp-no-tools.error .lucide {
+    color: #ff5d5d;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .mcp-actions-footer {
     margin-top: auto;
     padding-top: 20px;
@@ -180,13 +305,51 @@
     background: rgba(46, 204, 113, 0.1);
     color: #2ecc71;
     border: 1px solid rgba(46, 204, 113, 0.2);
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.mcp-connected-controls {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-refresh-tools {
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-refresh-tools:hover {
+    background: #2ecc71;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-refresh-tools:hover .lucide {
+    animation: spin 1s infinite linear;
 }
 
 .mcp-status-banner.installing {
+
     background: rgba(241, 196, 15, 0.1);
     color: #f1c40f;
     border: 1px solid rgba(241, 196, 15, 0.2);
 }
+
 .installing-progress-container {
     width: 100%;
     display: flex;

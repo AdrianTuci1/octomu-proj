@@ -55,5 +55,99 @@
         "download_url": "http://localhost:8081/binaries/memory-mcp/octomus-memory-mcp",
         "status": "disconnected",
         "auth_type": "none"
+    },
+    {
+        "id": "github_mcp",
+        "label": "GitHub MCP (OAuth2)",
+        "description": "Read and manage GitHub repositories, issues, and pull requests via MCP.",
+        "icon": "Github",
+        "image_url": "/images/github_placeholder.png",
+        "type": "remote_http",
+        "endpoint": "https://api.githubcopilot.com/mcp/",
+        "status": "disconnected",
+        "auth_type": "oauth2",
+        "auth_config": {
+            "help_text": "Authorize Octomus to access your GitHub account.",
+            "authorization_url": "https://api.octomus.cloud/auth/start/github",
+            "token_url": "https://api.octomus.cloud/oauth/exchange/github",
+            "scopes": [
+                "repo",
+                "read:user"
+            ],
+            "redirect_uri": "octomus://oauth/callback"
+        }
+    },
+    {
+        "id": "wordpress_mcp",
+        "label": "WordPress MCP",
+        "description": "Create and manage WordPress posts, pages, and categories.",
+        "icon": "Globe",
+        "image_url": "/images/wordpress.png",
+        "type": "local_binary",
+        "install_cmd": "curl -sSL https://octomus.cloud/binaries/wordpress-mcp/install.sh | bash",
+        "binary_path": "/Users/adriantucicovenco/Proiecte/octomus/mvp/binaries/wordpress-mcp/octomus-wordpress-mcp",
+        "download_url": "http://localhost:8081/binaries/wordpress-mcp/octomus-wordpress-mcp",
+        "status": "disconnected",
+        "auth_type": "api_key",
+        "auth_config": {
+            "placeholder": "Enter your WordPress Application Password",
+            "help_text": "You can generate an application password in your WordPress user profile.",
+            "env_var_name": "WP_APPLICATION_PASSWORD"
+        }
+    },
+    {
+        "id": "applescript_mcp",
+        "label": "Apple Script MCP",
+        "description": "Execute AppleScript commands to automate macOS applications.",
+        "icon": "Cpu",
+        "image_url": "/images/applescript_placeholder.png",
+        "type": "local_binary",
+        "install_cmd": "curl -sSL https://octomus.cloud/binaries/applescript-mcp/install.sh | bash",
+        "binary_path": "/Users/adriantucicovenco/Proiecte/octomus/mvp/binaries/applescript-mcp/octomus-applescript-mcp",
+        "download_url": "http://localhost:8081/binaries/applescript-mcp/octomus-applescript-mcp",
+        "status": "disconnected",
+        "auth_type": "none"
+    },
+    {
+        "id": "bigquery_mcp",
+        "label": "Big Query MCP",
+        "description": "Query and analyze data in Google BigQuery datasets.",
+        "icon": "Database",
+        "image_url": "/images/bigquery_placeholder.png",
+        "type": "local_binary",
+        "install_cmd": "curl -sSL https://octomus.cloud/binaries/bigquery-mcp/install.sh | bash",
+        "binary_path": "/Users/adriantucicovenco/Proiecte/octomus/mvp/binaries/bigquery-mcp/octomus-bigquery-mcp",
+        "download_url": "http://localhost:8081/binaries/bigquery-mcp/octomus-bigquery-mcp",
+        "status": "disconnected",
+        "auth_type": "api_key",
+        "auth_config": {
+            "placeholder": "Enter your Google Cloud Project ID",
+            "help_text": "You can find your Project ID in the Google Cloud Console.",
+            "env_var_name": "GOOGLE_CLOUD_PROJECT"
+        }
+    },
+    {
+        "id": "grafana_mcp",
+        "label": "Grafana MCP",
+        "description": "Manage Grafana dashboards and query data sources.",
+        "icon": "BarChart2",
+        "image_url": "/images/grafana.jpg",
+        "type": "local_binary",
+        "install_cmd": "curl -sSL https://octomus.cloud/binaries/grafana-mcp/install.sh | bash",
+        "binary_path": "/Users/adriantucicovenco/Proiecte/octomus/mvp/binaries/grafana-mcp/octomus-grafana-mcp",
+        "download_url": "http://localhost:8081/binaries/grafana-mcp/octomus-grafana-mcp",
+        "status": "disconnected",
+        "auth_type": "api_key",
+        "auth_config": {
+            "placeholder": "Enter your Grafana URL and Token",
+            "help_text": "Enter your Grafana URL (e.g., https://grafana.example.com) and Service Account Token.",
+            "env_var_name": "GRAFANA_TOKEN",
+            "additional_env_vars": [
+                {
+                    "name": "GRAFANA_URL",
+                    "placeholder": "https://your-grafana-url.com"
+                }
+            ]
+        }
     }
 ]

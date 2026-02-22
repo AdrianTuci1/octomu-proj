@@ -178,9 +178,22 @@
     color: var(--text-secondary);
 }
 
+.tab-hint-outer.active .hint-text {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.tab-hint-outer.active .hint-key {
+    background: var(--accent-color);
+    border-color: #7f7fff;
+    color: white;
+}
+
 .chat-mode .search-input {
+
     color: var(--text-primary);
 }
+
 .reset-chat-button {
     display: flex;
     align-items: center;

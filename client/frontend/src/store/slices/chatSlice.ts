@@ -16,6 +16,7 @@ export const createChatSlice: StateCreator<AppState, [], [], ChatSlice> = (set, 
 
     resetChat: () => set({
         conversation: [],
-        results: [] // Also clear results from commandSlice if needed
+        sessionArtifacts: [], // Clear technical discovery state
+        results: []
     })
 });

@@ -6,20 +6,52 @@ export function CheckBinary(arg1) {
   return window['go']['main']['App']['CheckBinary'](arg1);
 }
 
+export function DeleteCredential(arg1) {
+  return window['go']['main']['App']['DeleteCredential'](arg1);
+}
+
 export function DownloadBinary(arg1, arg2) {
   return window['go']['main']['App']['DownloadBinary'](arg1, arg2);
+}
+
+export function ExchangeToken(arg1, arg2, arg3, arg4, arg5) {
+  return window['go']['main']['App']['ExchangeToken'](arg1, arg2, arg3, arg4, arg5);
 }
 
 export function ExecuteBinary(arg1, arg2, arg3, arg4, arg5) {
   return window['go']['main']['App']['ExecuteBinary'](arg1, arg2, arg3, arg4, arg5);
 }
 
+export function ExecuteRemoteTool(arg1, arg2, arg3, arg4, arg5) {
+  return window['go']['main']['App']['ExecuteRemoteTool'](arg1, arg2, arg3, arg4, arg5);
+}
+
+export function GetCredential(arg1) {
+  return window['go']['main']['App']['GetCredential'](arg1);
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
+export function HasCredential(arg1) {
+  return window['go']['main']['App']['HasCredential'](arg1);
+}
+
 export function ListTools(arg1, arg2, arg3) {
   return window['go']['main']['App']['ListTools'](arg1, arg2, arg3);
+}
+
+export function ListToolsRemote(arg1, arg2, arg3) {
+  return window['go']['main']['App']['ListToolsRemote'](arg1, arg2, arg3);
+}
+
+export function OpenOAuthBrowser(arg1) {
+  return window['go']['main']['App']['OpenOAuthBrowser'](arg1);
+}
+
+export function SaveCredential(arg1, arg2) {
+  return window['go']['main']['App']['SaveCredential'](arg1, arg2);
 }
 
 export function ToggleWindow() {
