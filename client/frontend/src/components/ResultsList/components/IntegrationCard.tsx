@@ -7,7 +7,7 @@ interface IntegrationCardProps {
     isKeyboardFocused?: boolean;
     selectedIntegrationId: string | null;
     setSelectedIntegrationId: (id: string | null) => void;
-    renderIcon: (iconName?: string) => React.ReactNode;
+    renderIcon: (item: IMCPRegistryItem) => React.ReactNode;
 }
 
 export const IntegrationCard: React.FC<IntegrationCardProps> = ({
@@ -29,7 +29,7 @@ export const IntegrationCard: React.FC<IntegrationCardProps> = ({
                     {app.image_url ? (
                         <img src={`http://localhost:8081${app.image_url}`} alt={app.label} className="app-image" />
                     ) : (
-                        renderIcon(app.icon)
+                        renderIcon(app)
                     )}
                 </div>
                 <div className="integration-info">

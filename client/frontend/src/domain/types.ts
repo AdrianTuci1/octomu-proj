@@ -1,5 +1,5 @@
 export type MessageType = 'user' | 'ai' | 'system';
-export type ViewType = 'main' | 'snippets' | 'history' | 'authorizations' | 'chatHistory' | 'mcpDetail';
+export type ViewType = 'main' | 'snippets' | 'history' | 'authorizations' | 'chatHistory' | 'mcpDetail' | 'settings';
 
 export interface IMessage {
     id: string;
@@ -27,6 +27,8 @@ export interface IResultItem {
     icon?: string; // Lucide icon name or emoji
     progress?: number; // 0-100 for walkthroughs
     command?: string;
+    path?: string; // For applications
+    iconBase64?: string; // Real app icons
     accessory?: string; // Right-aligned text like "Raycast" or "Command"
 }
 
@@ -84,6 +86,7 @@ export interface IMCPRegistryItem {
 
     /** Runtime-only: API key entered by the user (not persisted in this object) */
     apiKey?: string;
+    isEnabled?: boolean; // New: manual toggle to stop background process
 }
 
 /** Connection info passed to Wails remote MCP calls */

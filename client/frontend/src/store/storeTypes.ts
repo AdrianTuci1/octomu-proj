@@ -18,6 +18,7 @@ export interface UISlice {
     isChatMode: boolean;
     showMentions: boolean;
     activeMentions: IExtension[]; // Added: currently active context chips
+    toolRecommendations: string[]; // Added: context-specific recommendations (e.g. for @google)
     selectedIntegrationId: string | null;
     setQuery: (query: string) => void;
     setCurrentView: (view: ViewType) => void;
@@ -51,6 +52,7 @@ export interface CommandSlice {
     rejectCommand: () => void;
     handleChatSubmit: () => Promise<void>;
     handleResultSelection: (item: IResultItem) => void;
+    discoverApps: () => Promise<void>;
 }
 
 export interface ExtensionSlice {
@@ -63,7 +65,24 @@ export interface ExtensionSlice {
     fetchTools: (id: string) => Promise<void>;
     connectExtension: (id: string, apiKey?: string) => Promise<void>;
     disconnectExtension: (id: string) => Promise<void>;
+    toggleExtension: (id: string) => Promise<void>;
 }
 
 
-export type AppState = UISlice & ChatSlice & CommandSlice & ExtensionSlice;
+export interface SettingsSlice {
+    appearance: 'light' | 'dark' | 'system';
+    windowMode: 'default' | 'compact';
+    hotkey: string;
+    launchAtLogin: boolean;
+    textSize: 'small' | 'large';
+    activeSettingsTab: 'general' | 'extensions' | 'ai' | 'advanced';
+
+    setAppearance: (appearance: 'light' | 'dark' | 'system') => void;
+    setWindowMode: (windowMode: 'default' | 'compact') => void;
+    setHotkey: (hotkey: string) => void;
+    setLaunchAtLogin: (launchAtLogin: boolean) => void;
+    setTextSize: (textSize: 'small' | 'large') => void;
+    setActiveSettingsTab: (tab: 'general' | 'extensions' | 'ai' | 'advanced') => void;
+}
+
+export type AppState = UISlice & ChatSlice & CommandSlice & ExtensionSlice & SettingsSlice;

@@ -26,8 +26,16 @@ export function ExecuteRemoteTool(arg1, arg2, arg3, arg4, arg5) {
   return window['go']['main']['App']['ExecuteRemoteTool'](arg1, arg2, arg3, arg4, arg5);
 }
 
+export function ExecuteSystemCommand(arg1) {
+  return window['go']['main']['App']['ExecuteSystemCommand'](arg1);
+}
+
 export function GetCredential(arg1) {
   return window['go']['main']['App']['GetCredential'](arg1);
+}
+
+export function GetInstalledApps() {
+  return window['go']['main']['App']['GetInstalledApps']();
 }
 
 export function Greet(arg1) {
@@ -52,6 +60,10 @@ export function OpenOAuthBrowser(arg1) {
 
 export function SaveCredential(arg1, arg2) {
   return window['go']['main']['App']['SaveCredential'](arg1, arg2);
+}
+
+export function StopBinary(arg1) {
+  return window['go']['main']['App']['StopBinary'](arg1);
 }
 
 export function ToggleWindow() {

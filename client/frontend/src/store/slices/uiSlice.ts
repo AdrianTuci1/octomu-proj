@@ -10,6 +10,7 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
     isChatMode: false,
     showMentions: false,
     activeMentions: [],
+    toolRecommendations: [],
     selectedIntegrationId: null,
 
     setQuery: (query) => {
@@ -53,8 +54,14 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
     addMention: (extension) => {
         const { activeMentions } = get();
         if (!activeMentions.find(m => m.id === extension.id)) {
+            let recommendations: string[] = [];
+            if (extension.handle === 'google') {
+                recommendations = ['Open in New Tab', 'Open in New Window'];
+            }
+
             set({
                 activeMentions: [...activeMentions, extension],
+                toolRecommendations: recommendations,
                 query: '',
                 typingQuery: '',
                 showMentions: false,
@@ -65,7 +72,10 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
 
     removeMention: (id) => {
         const { activeMentions } = get();
-        set({ activeMentions: activeMentions.filter(m => m.id !== id) });
+        set({
+            activeMentions: activeMentions.filter(m => m.id !== id),
+            toolRecommendations: []
+        });
     },
 
     goBack: () => {
@@ -110,7 +120,8 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
                 typingQuery: '',
                 suggestion: '',
                 showMentions: false,
-                activeMentions: []
+                activeMentions: [],
+                toolRecommendations: []
             });
         }
     },

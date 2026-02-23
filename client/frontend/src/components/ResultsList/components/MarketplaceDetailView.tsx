@@ -10,8 +10,9 @@ interface MarketplaceDetailViewProps {
     toolFetchErrors: Record<string, string | null>;
     connectExtension: (id: string, apiKey?: string) => void;
     disconnectExtension: (id: string) => void;
+    toggleExtension: (id: string) => void;
     fetchTools: (id: string) => void;
-    renderIcon: (iconName?: string) => React.ReactNode;
+    renderIcon: (item: IMCPRegistryItem) => React.ReactNode;
     installProgress: Record<string, number>;
 }
 
@@ -22,6 +23,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
     toolFetchErrors,
     connectExtension,
     disconnectExtension,
+    toggleExtension,
     fetchTools,
     renderIcon,
     installProgress
@@ -65,7 +67,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                     {mcp.image_url ? (
                         <img src={`http://localhost:8081${mcp.image_url}`} alt={mcp.label} className="app-image" />
                     ) : (
-                        renderIcon(mcp.icon)
+                        renderIcon(mcp)
                     )}
                 </div>
                 <div className="mcp-detail-header-info">
@@ -81,6 +83,15 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                     </div>
                     {mcp.status === 'connected' && (
                         <div className="mcp-header-actions-group">
+                            <button
+                                className={`btn-power-toggle ${mcp.isEnabled === false ? 'off' : 'on'}`}
+                                onClick={() => toggleExtension(mcp.id)}
+                                title={mcp.isEnabled === false ? 'Start Process' : 'Stop Process (Save Memory)'}
+                            >
+                                <LucideIcons.Power size={14} />
+                                {mcp.isEnabled === false ? 'Start' : 'Running'}
+                            </button>
+
                             {showDisconnectConfirm ? (
                                 <div className="disconnect-confirm-bubble">
                                     <span>Are you sure?</span>

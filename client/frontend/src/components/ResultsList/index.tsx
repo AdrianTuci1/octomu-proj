@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { useStore } from '../../store/useStore';
-import { IResultItem } from '../../domain/types';
+import { IResultItem, IChatSession, IMCPRegistryItem } from '../../domain/types';
 import { DEFAULT_RESULTS } from '../../store/slices/resultsData';
 import { ChatView } from './components/ChatView';
-import { HistoryView } from './components/HistoryView';
+import { ResultsGroups } from './components/ResultsGroups';
 import { MarketplaceView } from './components/MarketplaceView';
 import { MarketplaceDetailView } from './components/MarketplaceDetailView';
+import { SettingsView } from '../Settings/SettingsView';
+
 import './ResultsList.css';
 
 export const ResultsList: React.FC = () => {
@@ -27,10 +29,11 @@ export const ResultsList: React.FC = () => {
         selectChat,
         connectExtension,
         disconnectExtension,
+        toggleExtension,
         selectedIntegrationId,
-
         setSelectedIntegrationId,
         handleResultSelection,
+        discoverApps,
         fetchTools,
         setCurrentView,
         allowTool,
@@ -50,14 +53,63 @@ export const ResultsList: React.FC = () => {
         }
     }, [selectedIndex]);
 
+    useEffect(() => {
+        discoverApps();
+    }, [discoverApps]);
+
     const activeResults: IResultItem[] = results.length > 0 ? results : DEFAULT_RESULTS;
 
-    const filteredResults = typingQuery.trim() === ''
-        ? activeResults
+    let filteredResults = typingQuery.trim() === ''
+        ? [
+            {
+                id: 'welcome-walkthrough',
+                label: 'Welcome to Octomus',
+                category: 'Welcome',
+                type: 'walkthrough',
+                progress: 10,
+                icon: 'Zap',
+                accessory: 'Getting Started'
+            } as IResultItem,
+            ...activeResults
+        ]
         : activeResults.filter((r: IResultItem) =>
             r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
-            r.category.toLowerCase().includes(typingQuery.toLowerCase())
+            r.category.toLowerCase().includes(typingQuery.toLowerCase()) ||
+            (r.mention && r.mention.toLowerCase().includes(typingQuery.toLowerCase()))
         );
+
+    // If searching, enforce specific rules
+    if (typingQuery.trim() !== '') {
+        const genuineMatches = activeResults.filter((r: IResultItem) =>
+            r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
+            r.category.toLowerCase().includes(typingQuery.toLowerCase()) ||
+            (r.mention && r.mention.toLowerCase().includes(typingQuery.toLowerCase()))
+        );
+
+        const searchFilesItem = activeResults.find(r => r.id === 'util-search-files');
+
+        if (genuineMatches.length > 0) {
+            // Actual matches exist: show them first
+            filteredResults = genuineMatches;
+            // Add Search Files at the end if it's not already there (unless user wants it strictly pinned?)
+            // User said: "search files apare doar daca rezultatul nu exista"
+            // I'll take it as "if genuine results exist, Search Files is NOT at the top".
+            if (searchFilesItem && !filteredResults.find(r => r.id === searchFilesItem.id)) {
+                filteredResults.push(searchFilesItem);
+            }
+        } else {
+            // No matches found: "Search Files" should be first
+            filteredResults = searchFilesItem ? [searchFilesItem] : [];
+        }
+
+        // Fill with activeResults if too short to avoid empty list
+        if (filteredResults.length < 5) {
+            const fillers = activeResults
+                .filter(r => !filteredResults.find(fr => fr.id === r.id))
+                .slice(0, 10 - filteredResults.length);
+            filteredResults = [...filteredResults, ...fillers];
+        }
+    }
 
     const sections: Record<string, IResultItem[]> = {};
     filteredResults.forEach((item: IResultItem) => {
@@ -65,8 +117,11 @@ export const ResultsList: React.FC = () => {
         sections[item.category].push(item);
     });
 
-    const renderIcon = (iconName?: string) => {
-        const icon = iconName ? (LucideIcons as any)[iconName] : null;
+    const renderIcon = (item: IResultItem | IMCPRegistryItem) => {
+        if ('iconBase64' in item && item.iconBase64) {
+            return <img src={`data: image / png; base64, ${item.iconBase64} `} alt="" style={{ width: 14, height: 14, objectFit: 'contain' }} />;
+        }
+        const icon = item.icon ? (LucideIcons as any)[item.icon] : null;
         if (icon) {
             const IconComponent = icon;
             return <IconComponent size={14} />;
@@ -87,7 +142,7 @@ export const ResultsList: React.FC = () => {
             )}
 
             {currentView === 'chatHistory' && (
-                <HistoryView
+                <ResultsGroups
                     sections={sections}
                     filteredResults={filteredResults}
                     selectedIndex={selectedIndex}
@@ -129,12 +184,14 @@ export const ResultsList: React.FC = () => {
                     toolFetchErrors={toolFetchErrors}
                     connectExtension={connectExtension}
                     disconnectExtension={disconnectExtension}
+                    toggleExtension={toggleExtension}
                     fetchTools={fetchTools}
                     renderIcon={renderIcon}
                     installProgress={installProgress}
                 />
 
             )}
+            {currentView === 'settings' && <SettingsView />}
         </div>
     );
 };

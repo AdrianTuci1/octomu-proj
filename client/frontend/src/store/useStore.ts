@@ -5,6 +5,7 @@ import { createUISlice } from './slices/uiSlice';
 import { createChatSlice } from './slices/chatSlice';
 import { createCommandSlice } from './slices/commandSlice';
 import { createExtensionSlice } from './slices/extensionSlice';
+import { createSettingsSlice } from './slices/settingsSlice';
 
 export const useStore = create<AppState>()(
     persist(
@@ -13,6 +14,7 @@ export const useStore = create<AppState>()(
             ...createChatSlice(...a),
             ...createCommandSlice(...a),
             ...createExtensionSlice(...a),
+            ...createSettingsSlice(...a),
         }),
         {
             name: 'octomus-storage',

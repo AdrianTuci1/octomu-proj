@@ -17,6 +17,7 @@ type App struct {
 	ctx           context.Context
 	windowVisible bool
 	mcpManager    *backend.MCPManager
+	systemService *backend.SystemService
 }
 
 // NewApp creates a new App application struct
@@ -34,6 +35,7 @@ var trayIcon []byte
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.mcpManager = backend.NewMCPManager(ctx)
+	a.systemService = backend.NewSystemService()
 	a.setupGlobalShortcut()
 
 	// Hide window on blur
@@ -96,6 +98,11 @@ func (a *App) CheckBinary(mcpId string) bool {
 	return a.mcpManager.CheckBinary(mcpId)
 }
 
+// StopBinary kills a running MCP binary process
+func (a *App) StopBinary(mcpId string) error {
+	return a.mcpManager.StopBinary(mcpId)
+}
+
 // ─── Remote HTTP MCP ─────────────────────────────────────────────────────────
 
 // ListToolsRemote fetches the tool schema from a remote HTTP MCP server.
@@ -146,4 +153,15 @@ func (a *App) DeleteCredential(key string) error {
 func (a *App) OpenOAuthBrowser(url string) error {
 	fmt.Printf("[Wails] Opening OAuth browser: %s\n", url)
 	return browser.OpenURL(url)
+}
+
+// ExecuteSystemCommand executes a macOS system command
+func (a *App) ExecuteSystemCommand(cmd string) (string, error) {
+	fmt.Printf("[Wails] Executing system command: %s\n", cmd)
+	return a.systemService.ExecuteCommand(cmd)
+}
+
+// GetInstalledApps returns a list of installed macOS applications
+func (a *App) GetInstalledApps() (string, error) {
+	return a.systemService.ExecuteCommand("list_apps")
 }

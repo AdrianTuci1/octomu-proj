@@ -25,7 +25,8 @@ export const createExtensionSlice: StateCreator<AppState, [], [], ExtensionSlice
                         return {
                             ...remote,
                             status: local.status,
-                            apiKey: local.apiKey
+                            apiKey: local.apiKey,
+                            isEnabled: local.isEnabled !== undefined ? local.isEnabled : true
                         };
                     }
                     return remote;
@@ -124,7 +125,7 @@ export const createExtensionSlice: StateCreator<AppState, [], [], ExtensionSlice
                         await MCPService.saveCredential(extension.auth_config?.env_var_name || `${id}_apiKey`, apiKey);
                     }
 
-                    set({ registry: get().registry.map(e => e.id === id ? { ...e, status: 'connected', apiKey: apiKey || 'KEYCHAIN_STORED' } : e) });
+                    set({ registry: get().registry.map(e => e.id === id ? { ...e, status: 'connected', apiKey: apiKey || 'KEYCHAIN_STORED', isEnabled: true } : e) });
 
                     // Auto-fetch tools after successful setup
                     await get().fetchTools(id);
@@ -232,6 +233,41 @@ export const createExtensionSlice: StateCreator<AppState, [], [], ExtensionSlice
                 console.log(`[Extension] ${id} disconnected and credentials cleared.`);
             } catch (error) {
                 console.error(`[Extension] error during disconnect ${id}:`, error);
+            }
+        },
+
+        toggleExtension: async (id: string) => {
+            const { registry, tools } = get();
+            const extension = registry.find(e => e.id === id);
+            if (!extension || extension.status !== 'connected') return;
+
+            const newEnabledState = !extension.isEnabled;
+            console.log(`[Extension] Toggling ${id} to ${newEnabledState ? 'ENABLED' : 'DISABLED'}`);
+
+            try {
+                if (!newEnabledState) {
+                    // Manual Stop
+                    if (extension.type === 'local_binary') {
+                        console.log(`[Extension] Killing local process for ${id}...`);
+                        await (window as any).go.main.App.StopBinary(id);
+                    }
+
+                    // Clear tools for this extension to reflect it's "off"
+                    set(state => ({
+                        registry: state.registry.map(e => e.id === id ? { ...e, isEnabled: false } : e),
+                        tools: { ...state.tools, [id]: [] }
+                    }));
+                } else {
+                    // Manual Start (tools will be fetched on demand or immediately)
+                    set(state => ({
+                        registry: state.registry.map(e => e.id === id ? { ...e, isEnabled: true } : e)
+                    }));
+
+                    // Re-fetch tools which will trigger ensureMCPClient in backend
+                    await get().fetchTools(id);
+                }
+            } catch (error) {
+                console.error(`[Extension] Toggle failed for ${id}:`, error);
             }
         }
 

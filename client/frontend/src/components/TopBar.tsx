@@ -14,6 +14,7 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
         isChatMode,
         showMentions,
         activeMentions,
+        toolRecommendations, // Added
         extensions, // Added
         selectedIndex, // Added
         query,
@@ -141,6 +142,19 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
                             style={isTypingMention ? { opacity: 0, position: 'absolute', width: '1px' } : {}}
                         />
 
+                        {toolRecommendations.length > 0 && (
+                            <div className="tool-recommendations">
+                                {toolRecommendations.map((rec: string, i: number) => (
+                                    <div
+                                        key={i}
+                                        className="recommendation-chip"
+                                        onClick={() => setQuery(rec + ' ')}
+                                    >
+                                        {rec}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 

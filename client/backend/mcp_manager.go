@@ -294,8 +294,22 @@ func (m *MCPManager) ExecuteRemoteTool(mcpId, endpoint, token, toolName string, 
 	return out.String(), nil
 }
 
-// ExchangeToken performs a client_credentials OAuth2 exchange directly with the provider.
-// This ensures that ClientSecret never leaves the user's machine.
+// StopBinary kills a running MCP binary process and removes it from the active map.
+func (m *MCPManager) StopBinary(mcpId string) error {
+	m.mcpMutex.Lock()
+	defer m.mcpMutex.Unlock()
+
+	client, exists := m.activeMCPs[mcpId]
+	if !exists {
+		return nil // Already stopped or not running
+	}
+
+	fmt.Printf("[MCP Manager] Stopping binary for %s...\n", mcpId)
+	err := client.Close()
+	delete(m.activeMCPs, mcpId)
+	return err
+}
+
 func (m *MCPManager) ExchangeToken(mcpId, tokenURL, clientId, clientSecret string, scopes []string) (string, error) {
 	fmt.Printf("[MCP Manager] Exchanging tokens for %s via %s...\n", mcpId, tokenURL)
 

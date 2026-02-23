@@ -6,7 +6,7 @@ import { IMessage } from '../../../domain/types';
 
 export class ChatCommandHandler {
     static async handleSubmit(set: any, get: any) {
-        const { query, typingQuery, isChatMode, selectedIndex, results, chatSessions, currentView, showMentions, extensions, addMention, registry, sessionArtifacts } = get() as AppState;
+        const { query, typingQuery, isChatMode, selectedIndex, results, chatSessions, currentView, showMentions, extensions, addMention, activeMentions, toolRecommendations, registry, sessionArtifacts } = get() as AppState;
 
         if (showMentions && selectedIndex >= 0) {
             const lastWord = typingQuery.split(' ').pop() || '';
@@ -58,6 +58,15 @@ export class ChatCommandHandler {
         }
 
         if (isChatMode || query.trim().length > 0) {
+            // Check for @google mention for direct search
+            const googleMention = activeMentions.find((m: any) => m.handle === 'google' || m.id === 'ext-google');
+            if (googleMention && query.trim().length > 0) {
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query.trim())}`;
+                (window as any).go.main.App.OpenOAuthBrowser(searchUrl);
+                set({ query: '', typingQuery: '', isChatMode: false, currentView: 'chatHistory', activeMentions: [], toolRecommendations: [] });
+                return;
+            }
+
             const userMsg = ChatService.createUserMessage(query);
             const currentConversation = [...get().conversation, userMsg];
 

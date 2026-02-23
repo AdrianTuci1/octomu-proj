@@ -1,0 +1,49 @@
+Comandă,Descriere
+Maximize,Extinde fereastra curentă pe tot ecranul.
+Left / Right Half,Împarte ecranul perfect între două aplicații.
+Reasonable Size,"Aduce fereastra la o dimensiune centrală, optimă pentru citit."
+Almost Maximize,"Mărește fereastra, dar lasă un pic de spațiu pe margini (estetic)."
+Empty Trash,Golește coșul de gunoi instantaneu.
+Toggle System Appearance,Schimbă rapid între Light Mode și Dark Mode.
+Sleep / Restart,Comenzi directe pentru starea Mac-ului.
+Confetti,Lansează confetti pe ecran (perfect pentru când termini un task).
+Clipboard History,"Accesează tot ce ai copiat (text, imagini, link-uri)."
+Search Menu Items,Caută prin meniurile aplicației active (în loc să dai click pe File/Edit).
+Snippets,Inserează rapid texte repetitive prin scurtături (ex: ;mail).
+Calculator,"Calcule complexe, conversii valutare și de unități."
+Emoji Picker,Cel mai rapid mod de a insera un emoji.
+QuickLinks,Creează scurtături către URL-uri sau foldere specifice.
+My Schedule,Vezi calendarul și intră în call-uri (Zoom/Meet) cu un click.
+Floating Notes,"O notiță mică, mereu vizibilă, pentru idei rapide."
+Search Files,Căutare ultra-rapidă de fișiere cu previzualizare (tasta Space).
+Recent Files,Listă cu ultimele fișiere deschise.
+Downloads Folder,Acces instant la ultimele fișiere descărcate.
+Force Quit,Închide forțat orice aplicație care s-a blocat.
+Kill Process,Închide forțat orice proces care s-a blocat.
+Ask Kill Process,Întreabă ce proces vrei să închizi.
+Replace Spotlight with Octomus,Înlocuiește Spotlight cu Octomus.
+Manage Models,Gestionează modelele AI.
+Start focus session,Începe o sesiune de focus.
+Eject All Disks,Ejectează toate discurile.
+
+
+Google Search,Caută direct pe Google fără să deschizi browserul întâi.
+Brew,Administrează pachetele Homebrew (install/update) din terminal.
+Spotify / Apple Music,Control media (play/next/search) direct din Raycast.
+Speedtest,Rulează un test de viteză a internetului instantaneu.
+Color Picker,Extrage codul HEX/RGB de oriunde de pe ecran.
+IP Geolocation,Vezi IP-ul tău public și detaliile rețelei.
+Translate,Traducere rapidă (Google Translate / DeepL).
+
+
+Ask AI,Chat direct cu modele precum GPT-4 sau Claude.
+Fix Spelling & Grammar,Corectează automat textul selectat.
+Explain Code,Explică logica unui fragment de cod pe care l-ai copiat.
+Change tone to casual, Transformă textul într-unul mai relaxat (ex: email formal -> mesaj prietenos).
+Change tone to confident, Transformă textul într-unul mai încrezător (ex: email informal -> mesaj formal).
+Change tone to friendly, Transformă textul într-unul mai prietenos.
+Change tone to proffesional, Transformă textul într-unul mai profesionist.
+Improve writing,Îmbunătățește textul selectat.
+Make longer, Extinde textul selectat.
+Make shorter, Scurtează textul selectat.
+Make QR code, Generează un cod qr.

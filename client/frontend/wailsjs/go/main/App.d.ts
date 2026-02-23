@@ -13,7 +13,11 @@ export function ExecuteBinary(arg1:string,arg2:string,arg3:Record<string, any>,a
 
 export function ExecuteRemoteTool(arg1:string,arg2:string,arg3:string,arg4:string,arg5:Record<string, any>):Promise<string>;
 
+export function ExecuteSystemCommand(arg1:string):Promise<string>;
+
 export function GetCredential(arg1:string):Promise<string>;
+
+export function GetInstalledApps():Promise<string>;
 
 export function Greet(arg1:string):Promise<string>;
 
@@ -26,5 +30,7 @@ export function ListToolsRemote(arg1:string,arg2:string,arg3:string):Promise<str
 export function OpenOAuthBrowser(arg1:string):Promise<void>;
 
 export function SaveCredential(arg1:string,arg2:string):Promise<void>;
+
+export function StopBinary(arg1:string):Promise<void>;
 
 export function ToggleWindow():Promise<void>;

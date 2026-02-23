@@ -11,7 +11,7 @@ interface MarketplaceViewProps {
     setSelectedIntegrationId: (id: string | null) => void;
     connectExtension: (id: string) => void;
     tools: Record<string, any[]>;
-    renderIcon: (iconName?: string) => React.ReactNode;
+    renderIcon: (item: IMCPRegistryItem) => React.ReactNode;
 }
 
 export const MarketplaceView: React.FC<MarketplaceViewProps> = ({

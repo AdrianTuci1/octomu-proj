@@ -1,12 +1,12 @@
 .list-item {
     display: flex;
     align-items: center;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 8px;
     cursor: pointer;
-    gap: 12px;
-    transition: all 0.1s ease;
-    min-height: 44px;
+    gap: 10px;
+    transition: background 0.1s ease;
+    min-height: 38px;
 }
 
 .list-item:hover,
@@ -14,15 +14,77 @@
     background: var(--selection-color);
 }
 
+/* ── Icon box ────────────────────────────────────────────────────────────────── */
+
 .item-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-primary);
-    opacity: 0.8;
+    border-radius: 7px;
+
+    /* default (no category match) */
+    background: rgba(120, 120, 128, 0.15);
+    color: rgba(120, 120, 128, 0.85);
 }
+
+/* Window Management — blue */
+.item-icon[data-category="Window Management"] {
+    background: rgba(10, 132, 255, 0.15);
+    color: rgba(10, 132, 255, 0.9);
+}
+
+/* System — red-orange */
+.item-icon[data-category="System"] {
+    background: rgba(255, 69, 58, 0.15);
+    color: rgba(255, 69, 58, 0.9);
+}
+
+/* AI Commands — purple */
+.item-icon[data-category="AI Commands"] {
+    background: rgba(191, 90, 242, 0.15);
+    color: rgba(191, 90, 242, 0.9);
+}
+
+/* Utilities — teal */
+.item-icon[data-category="Utilities"] {
+    background: rgba(52, 199, 89, 0.15);
+    color: rgba(52, 199, 89, 0.9);
+}
+
+/* Effects — yellow */
+.item-icon[data-category="Effects"] {
+    background: rgba(255, 214, 10, 0.15);
+    color: rgba(255, 214, 10, 0.9);
+}
+
+/* Search — cyan */
+.item-icon[data-category="Search"] {
+    background: rgba(50, 173, 230, 0.15);
+    color: rgba(50, 173, 230, 0.9);
+}
+
+/* Developer — amber */
+.item-icon[data-category="Developer"] {
+    background: rgba(255, 159, 10, 0.15);
+    color: rgba(255, 159, 10, 0.9);
+}
+
+/* Music / App — pink */
+.item-icon[data-category="Music"] {
+    background: rgba(255, 55, 95, 0.15);
+    color: rgba(255, 55, 95, 0.9);
+}
+
+/* Utility (settings) — gray-blue */
+.item-icon[data-category="Utility"] {
+    background: rgba(99, 99, 102, 0.15);
+    color: rgba(99, 99, 102, 0.9);
+}
+
+/* ── Content ─────────────────────────────────────────────────────────────────── */
 
 .item-content {
     flex: 1;
@@ -47,15 +109,10 @@
 }
 
 .item-mention {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-secondary);
-    opacity: 0.7;
-}
-
-.item-subtitle-inline {
-    font-size: 13px;
-    color: var(--text-secondary);
-    opacity: 0.5;
+    opacity: 0.6;
+    font-family: monospace;
 }
 
 .item-subtitle {
@@ -68,13 +125,14 @@
 }
 
 .item-accessory {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-secondary);
-    opacity: 0.4;
+    opacity: 0.35;
     white-space: nowrap;
 }
 
-/* Progress Bar */
+/* ── Progress Bar ────────────────────────────────────────────────────────────── */
+
 .progress-container {
     margin-top: 4px;
     height: 4px;
@@ -92,4 +150,10 @@
 
 .chat-history-list {
     margin-top: 8px;
+}
+
+/* Chat session icon — no data-category, keep neutral */
+.chat-session-item .item-icon {
+    background: rgba(120, 120, 128, 0.15);
+    color: rgba(120, 120, 128, 0.85);
 }
