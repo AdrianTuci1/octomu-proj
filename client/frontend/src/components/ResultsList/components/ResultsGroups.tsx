@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { IResultItem } from '../../../domain/types';
 import { HistoryView } from './HistoryView';
 import { MessageSquare } from 'lucide-react';
@@ -20,7 +20,8 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = ({ filteredResults })
         return <HistoryView filteredResults={filteredResults} />;
     }
 
-    // Welcome item is now prepended to filteredResults at index 0 in the parent
+    // Build a flat list of selectable items (excluding welcome walkthrough for navigation)
+    // Welcome walkthrough is visible but not selectable via keyboard navigation
     const welcomeWalkthrough = filteredResults.find(r => r.id === 'welcome-walkthrough');
 
     // Specific initial suggestions as requested by user
@@ -47,10 +48,25 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = ({ filteredResults })
         item.id !== 'welcome-walkthrough'
     );
 
-    const renderItem = (item: IResultItem) => {
-        // In grouped view, the selectedIndex refers to the flattened filteredResults.
-        const globalIndex = filteredResults.indexOf(item);
-        const isActive = globalIndex !== -1 && globalIndex === selectedIndex;
+    // Create flat list for selection (excluding welcome walkthrough)
+    const selectableItems = useMemo(() => {
+        return [
+            ...suggestions,
+            ...integrations,
+            ...commands,
+            ...apps
+        ];
+    }, [suggestions, integrations, commands, apps]);
+
+    const getItemIndex = (item: IResultItem): number => {
+        return selectableItems.findIndex(r => r.id === item.id);
+    };
+
+    const renderItem = (item: IResultItem, isWelcomeWalkthrough = false) => {
+        // For welcome walkthrough, it's always first but not selectable via keyboard
+        // For other items, use the selectableItems index
+        const globalIndex = isWelcomeWalkthrough ? -1 : getItemIndex(item);
+        const isActive = !isWelcomeWalkthrough && globalIndex !== -1 && globalIndex === selectedIndex;
 
         return (
             <div
@@ -120,7 +136,7 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = ({ filteredResults })
                     <div className="chat-history-list">
                         <div className="section-title">Recent Conversations</div>
                         {chatSessions.map((session, index) => {
-                            const historyIndex = filteredResults.length + index;
+                            const historyIndex = selectableItems.length + index;
                             return (
                                 <div
                                     key={session.id}

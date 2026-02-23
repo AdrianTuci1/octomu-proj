@@ -194,12 +194,7 @@ export class NavigationManager {
             return;
         }
 
-        const filteredResults = typingQuery.trim() === ''
-            ? results
-            : results.filter((r: any) =>
-                r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
-                r.category.toLowerCase().includes(typingQuery.toLowerCase())
-            );
+        const filteredResults = this.getFilteredResultsForHistory(results, typingQuery);
 
         let totalItems = filteredResults.length;
         if (typingQuery.trim() === '') {
@@ -210,5 +205,114 @@ export class NavigationManager {
         if (newIndex >= 0) {
             this.setUIState({ selectedIndex: newIndex });
         }
+    }
+
+    handleEnterSelection() {
+        const state = this.store.getState();
+        const { selectedIndex, typingQuery, currentView, showMentions } = state.ui;
+        const { results } = state.results;
+        const { chatSessions } = state.chat;
+        const { extensions } = state.command;
+        const { registry } = state.marketplace;
+        const { results: resultsManager, chat: chatManager } = state.core;
+
+        // Handle mentions overlay selection
+        if (showMentions) {
+            const lastWord = typingQuery.split(' ').pop() || '';
+            const filter = lastWord.startsWith('@') ? lastWord.slice(1).toLowerCase() : '';
+            const filteredExts = extensions.filter((ex: any) =>
+                ex.label.toLowerCase().includes(filter) ||
+                ex.handle.toLowerCase().includes(filter)
+            );
+            if (filteredExts[selectedIndex]) {
+                this.addMention(filteredExts[selectedIndex]);
+            }
+            return;
+        }
+
+        // Handle marketplace view
+        if (currentView === 'authorizations') {
+            if (registry[selectedIndex]) {
+                this.setSelectedIntegrationId(registry[selectedIndex].id);
+                this.setCurrentView('mcpDetail');
+            }
+            return;
+        }
+
+        // Handle history view (when typing)
+        if (currentView === 'history' || typingQuery.trim() !== '') {
+            const filteredResults = this.getFilteredResultsForHistory(results, typingQuery);
+
+            // Check if we're selecting a result item
+            if (selectedIndex < filteredResults.length && filteredResults[selectedIndex]) {
+                resultsManager.handleResultSelection(filteredResults[selectedIndex]);
+                return;
+            }
+
+            // Check if we're selecting a chat session (only when not typing)
+            if (typingQuery.trim() === '') {
+                const sessionIndex = selectedIndex - filteredResults.length;
+                if (sessionIndex >= 0 && sessionIndex < chatSessions.length) {
+                    chatManager.selectChat(chatSessions[sessionIndex].id);
+                }
+            }
+            return;
+        }
+
+        // Handle chatHistory view (ResultsGroups - when not typing)
+        const selectableItems = this.getSelectableItemsForResultsGroups(results);
+
+        // Check if we're selecting a result item
+        if (selectedIndex < selectableItems.length && selectableItems[selectedIndex]) {
+            resultsManager.handleResultSelection(selectableItems[selectedIndex]);
+            return;
+        }
+
+        // Check if we're selecting a chat session
+        const sessionIndex = selectedIndex - selectableItems.length;
+        if (sessionIndex >= 0 && sessionIndex < chatSessions.length) {
+            chatManager.selectChat(chatSessions[sessionIndex].id);
+        }
+    }
+
+    private getFilteredResultsForHistory(results: any[], typingQuery: string) {
+        // Filter out welcome walkthrough from history view
+        const baseResults = results.filter((r: any) => r.id !== 'welcome-walkthrough');
+
+        if (typingQuery.trim() === '') {
+            return baseResults;
+        }
+
+        return baseResults.filter((r: any) =>
+            r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
+            r.category.toLowerCase().includes(typingQuery.toLowerCase())
+        );
+    }
+
+    private getSelectableItemsForResultsGroups(results: any[]) {
+        // Match the order in ResultsGroups: suggestions, integrations, commands, apps
+        // Excluding welcome-walkthrough
+        const suggestionIds = ['ext-google', 'ai-improve', 'util-calculator', 'util-snippets', 'mcp-marketplace'];
+
+        const suggestions = suggestionIds
+            .map(id => results.find((r: any) => r.id === id))
+            .filter((r): r is any => !!r);
+
+        const integrations = results.filter((item: any) =>
+            item.type === 'ai_extension' &&
+            !suggestionIds.includes(item.id) &&
+            item.id !== 'welcome-walkthrough'
+        );
+
+        const apps = results.filter((item: any) => item.category === 'Apps');
+
+        const commands = results.filter((item: any) =>
+            !suggestionIds.includes(item.id) &&
+            item.type !== 'ai_extension' &&
+            item.category !== 'Apps' &&
+            item.id !== 'welcome-walkthrough'
+        );
+
+        return [...suggestions, ...integrations, ...commands, ...apps];
     }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { MessageSquare } from 'lucide-react';
 import { IResultItem } from '../../../domain/types';
@@ -15,45 +15,56 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ filteredResults }) => 
     const { selectedIndex, typingQuery } = useStore(state => state.ui);
     const { chatSessions } = useStore(state => state.chat);
 
+    // Filter out welcome walkthrough from history view
+    const historyResults = useMemo(() => {
+        return filteredResults.filter(item => item.id !== 'welcome-walkthrough');
+    }, [filteredResults]);
+
+    const hasResults = historyResults.length > 0;
+    const hasChatSessions = typingQuery.trim() === '' && chatSessions.length > 0;
+    const showEmptyState = !hasResults && !hasChatSessions;
+
     return (
         <div className="scroll-content">
-            <div className="sections-container">
-                <div className="result-section">
-                    <div className="section-title">Results</div>
-                    {filteredResults.map((item) => {
-                        const globalIndex = filteredResults.indexOf(item);
-                        return (
-                            <div
-                                key={item.id}
-                                className={`list-item result-item ${selectedIndex === globalIndex ? 'active' : ''}`}
-                                onClick={() => core.results.handleResultSelection(item)}
-                            >
-                                <div className="item-icon" data-category={item.category}>
-                                    <ResultIcon item={item} />
-                                </div>
-                                <div className="item-content">
-                                    <div className="item-main">
-                                        <span className="item-label">{item.label}</span>
-                                        {item.mention && <span className="item-mention">{item.mention}</span>}
+            {hasResults && (
+                <div className="sections-container">
+                    <div className="result-section">
+                        <div className="section-title">Results</div>
+                        {historyResults.map((item) => {
+                            const globalIndex = historyResults.indexOf(item);
+                            return (
+                                <div
+                                    key={item.id}
+                                    className={`list-item result-item ${selectedIndex === globalIndex ? 'active' : ''}`}
+                                    onClick={() => core.results.handleResultSelection(item)}
+                                >
+                                    <div className="item-icon" data-category={item.category}>
+                                        <ResultIcon item={item} />
                                     </div>
-                                    {item.type === 'walkthrough' && item.progress !== undefined && (
-                                        <div className="progress-container">
-                                            <div className="progress-bar" style={{ width: `${item.progress}%` }} />
+                                    <div className="item-content">
+                                        <div className="item-main">
+                                            <span className="item-label">{item.label}</span>
+                                            {item.mention && <span className="item-mention">{item.mention}</span>}
                                         </div>
-                                    )}
+                                        {item.type === 'walkthrough' && item.progress !== undefined && (
+                                            <div className="progress-container">
+                                                <div className="progress-bar" style={{ width: `${item.progress}%` }} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="item-accessory">{item.accessory}</div>
                                 </div>
-                                <div className="item-accessory">{item.accessory}</div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
+            )}
 
-            {typingQuery.trim() === '' && chatSessions.length > 0 && (
+            {hasChatSessions && (
                 <div className="chat-history-list">
                     <div className="section-title">Recent Conversations</div>
                     {chatSessions.map((session, index) => {
-                        const historyIndex = filteredResults.length + index;
+                        const historyIndex = historyResults.length + index;
                         return (
                             <div
                                 key={session.id}
@@ -76,7 +87,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ filteredResults }) => 
                 </div>
             )}
 
-            {filteredResults.length === 0 && chatSessions.length === 0 && (
+            {showEmptyState && (
                 <div className="empty-state">
                     <LucideIcons.Search size={24} className="empty-icon" />
                     <p>No matches found for "{typingQuery}"</p>

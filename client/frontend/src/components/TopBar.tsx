@@ -87,7 +87,11 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
         }
 
         if (e.key === 'Enter') {
-            core.command.handleChatSubmit();
+            if (isChatMode) {
+                core.command.handleChatSubmit();
+            } else {
+                core.navigation.handleEnterSelection();
+            }
         }
     };
 
