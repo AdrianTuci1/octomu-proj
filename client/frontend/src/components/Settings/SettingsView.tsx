@@ -7,7 +7,8 @@ import { ExtensionSettings } from './tabs/ExtensionSettings';
 import './SettingsView.css';
 
 export const SettingsView: React.FC = () => {
-    const { activeSettingsTab, setActiveSettingsTab, setCurrentView } = useStore();
+    const { activeSettingsTab } = useStore(state => state.settings);
+    const { core } = useStore();
 
     const tabs: Array<{ id: string, label: string, icon: any, badge?: string }> = [
         { id: 'general', label: 'General', icon: Settings },
@@ -34,7 +35,7 @@ export const SettingsView: React.FC = () => {
             <div className="settings-window">
                 <div className="settings-header">
                     <div className="settings-title">Raycast Settings</div>
-                    <button className="close-settings" onClick={() => setCurrentView('main')}>
+                    <button className="close-settings" onClick={() => core.navigation.goBack()}>
                         <X size={16} />
                     </button>
                     <div className="settings-tabs">
@@ -42,7 +43,7 @@ export const SettingsView: React.FC = () => {
                             <button
                                 key={tab.id}
                                 className={`settings-tab ${activeSettingsTab === tab.id ? 'active' : ''}`}
-                                onClick={() => setActiveSettingsTab(tab.id as any)}
+                                onClick={() => core.settings.setActiveSettingsTab(tab.id as any)}
                             >
                                 <tab.icon size={20} />
                                 <span>{tab.label}</span>

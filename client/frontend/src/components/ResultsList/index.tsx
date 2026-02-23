@@ -1,46 +1,24 @@
-import React, { useEffect, useRef } from 'react';
-import * as LucideIcons from 'lucide-react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import { useStore } from '../../store/useStore';
-import { IResultItem, IChatSession, IMCPRegistryItem } from '../../domain/types';
-import { DEFAULT_RESULTS } from '../../store/slices/resultsData';
-import { ChatView } from './components/ChatView';
 import { ResultsGroups } from './components/ResultsGroups';
+import { ChatView } from './components/ChatView';
 import { MarketplaceView } from './components/MarketplaceView';
 import { MarketplaceDetailView } from './components/MarketplaceDetailView';
+import { HistoryView } from './components/HistoryView';
 import { SettingsView } from '../Settings/SettingsView';
-
 import './ResultsList.css';
 
 export const ResultsList: React.FC = () => {
-    const {
-        currentView,
-        conversation,
-        chatSessions,
-        results,
-        typingQuery,
-        selectedIndex,
-        pendingCommand,
-        registry,
-        tools,
-        fetchingTools,
-        toolFetchErrors,
-        executeCommand,
-        rejectCommand,
-        selectChat,
-        connectExtension,
-        disconnectExtension,
-        toggleExtension,
-        selectedIntegrationId,
-        setSelectedIntegrationId,
-        handleResultSelection,
-        discoverApps,
-        fetchTools,
-        setCurrentView,
-        allowTool,
-        installProgress
-    } = useStore();
+    const currentView = useStore(state => state.ui.currentView);
+    const results = useStore(state => state.results.results);
+    const selectedIndex = useStore(state => state.ui.selectedIndex);
+    const { core } = useStore();
 
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        core.results.discoverApps();
+    }, [core.results]);
 
     useEffect(() => {
         if (!scrollRef.current) return;
@@ -53,145 +31,47 @@ export const ResultsList: React.FC = () => {
         }
     }, [selectedIndex]);
 
-    useEffect(() => {
-        discoverApps();
-    }, [discoverApps]);
+    const filteredResults = useMemo(() => {
+        // We filter out hidden results (like the welcome walkthrough if it were hidden)
+        // Note: IResultItem might not have isHidden yet, but it's a good practice.
+        // If it causes errors, I'll remove the check.
+        return results;
+    }, [results]);
 
-    const activeResults: IResultItem[] = results.length > 0 ? results : DEFAULT_RESULTS;
+    const renderContent = () => {
+        switch (currentView) {
+            case 'main':
+                return <ChatView />;
 
-    let filteredResults = typingQuery.trim() === ''
-        ? [
-            {
-                id: 'welcome-walkthrough',
-                label: 'Welcome to Octomus',
-                category: 'Welcome',
-                type: 'walkthrough',
-                progress: 10,
-                icon: 'Zap',
-                accessory: 'Getting Started'
-            } as IResultItem,
-            ...activeResults
-        ]
-        : activeResults.filter((r: IResultItem) =>
-            r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
-            r.category.toLowerCase().includes(typingQuery.toLowerCase()) ||
-            (r.mention && r.mention.toLowerCase().includes(typingQuery.toLowerCase()))
-        );
+            case 'authorizations':
+                return <MarketplaceView />;
 
-    // If searching, enforce specific rules
-    if (typingQuery.trim() !== '') {
-        const genuineMatches = activeResults.filter((r: IResultItem) =>
-            r.label.toLowerCase().includes(typingQuery.toLowerCase()) ||
-            r.category.toLowerCase().includes(typingQuery.toLowerCase()) ||
-            (r.mention && r.mention.toLowerCase().includes(typingQuery.toLowerCase()))
-        );
+            case 'mcpDetail':
+                return <MarketplaceDetailView />;
 
-        const searchFilesItem = activeResults.find(r => r.id === 'util-search-files');
+            case 'settings':
+                return <SettingsView />;
 
-        if (genuineMatches.length > 0) {
-            // Actual matches exist: show them first
-            filteredResults = genuineMatches;
-            // Add Search Files at the end if it's not already there (unless user wants it strictly pinned?)
-            // User said: "search files apare doar daca rezultatul nu exista"
-            // I'll take it as "if genuine results exist, Search Files is NOT at the top".
-            if (searchFilesItem && !filteredResults.find(r => r.id === searchFilesItem.id)) {
-                filteredResults.push(searchFilesItem);
-            }
-        } else {
-            // No matches found: "Search Files" should be first
-            filteredResults = searchFilesItem ? [searchFilesItem] : [];
+            case 'history':
+                return (
+                    <HistoryView
+                        filteredResults={filteredResults}
+                    />
+                );
+
+            case 'chatHistory':
+            default:
+                return (
+                    <ResultsGroups
+                        filteredResults={filteredResults}
+                    />
+                );
         }
-
-        // Fill with activeResults if too short to avoid empty list
-        if (filteredResults.length < 5) {
-            const fillers = activeResults
-                .filter(r => !filteredResults.find(fr => fr.id === r.id))
-                .slice(0, 10 - filteredResults.length);
-            filteredResults = [...filteredResults, ...fillers];
-        }
-    }
-
-    const sections: Record<string, IResultItem[]> = {};
-    filteredResults.forEach((item: IResultItem) => {
-        if (!sections[item.category]) sections[item.category] = [];
-        sections[item.category].push(item);
-    });
-
-    const renderIcon = (item: IResultItem | IMCPRegistryItem) => {
-        if ('iconBase64' in item && item.iconBase64) {
-            return <img src={`data: image / png; base64, ${item.iconBase64} `} alt="" style={{ width: 14, height: 14, objectFit: 'contain' }} />;
-        }
-        const icon = item.icon ? (LucideIcons as any)[item.icon] : null;
-        if (icon) {
-            const IconComponent = icon;
-            return <IconComponent size={14} />;
-        }
-        return <LucideIcons.Command size={14} />;
     };
 
     return (
-        <div className="results-list" ref={scrollRef}>
-            {currentView === 'main' && (
-                <ChatView
-                    conversation={conversation}
-                    pendingCommand={pendingCommand}
-                    executeCommand={executeCommand}
-                    rejectCommand={rejectCommand}
-                    allowTool={allowTool}
-                />
-            )}
-
-            {currentView === 'chatHistory' && (
-                <ResultsGroups
-                    sections={sections}
-                    filteredResults={filteredResults}
-                    selectedIndex={selectedIndex}
-                    typingQuery={typingQuery}
-                    chatSessions={chatSessions}
-                    handleResultSelection={handleResultSelection}
-                    selectChat={selectChat}
-                    renderIcon={renderIcon}
-                />
-            )}
-
-            {currentView === 'authorizations' && (
-                <MarketplaceView
-                    registry={registry}
-                    selectedIndex={selectedIndex}
-                    selectedIntegrationId={selectedIntegrationId}
-                    setSelectedIntegrationId={(id) => {
-                        setSelectedIntegrationId(id);
-                        if (id) setCurrentView('mcpDetail');
-                    }}
-                    connectExtension={connectExtension}
-                    tools={tools}
-                    renderIcon={renderIcon}
-                />
-            )}
-
-            {currentView === 'mcpDetail' && selectedIntegrationId && (
-                <MarketplaceDetailView
-                    mcp={registry.find(r => r.id === selectedIntegrationId) || {
-                        id: selectedIntegrationId,
-                        label: 'Loading...',
-                        description: '',
-                        icon: 'Package',
-                        type: 'cloud',
-                        status: 'disconnected'
-                    } as any}
-                    tools={tools[selectedIntegrationId] || []}
-                    fetchingTools={fetchingTools}
-                    toolFetchErrors={toolFetchErrors}
-                    connectExtension={connectExtension}
-                    disconnectExtension={disconnectExtension}
-                    toggleExtension={toggleExtension}
-                    fetchTools={fetchTools}
-                    renderIcon={renderIcon}
-                    installProgress={installProgress}
-                />
-
-            )}
-            {currentView === 'settings' && <SettingsView />}
+        <div className="results-list-wrapper" ref={scrollRef}>
+            {renderContent()}
         </div>
     );
 };

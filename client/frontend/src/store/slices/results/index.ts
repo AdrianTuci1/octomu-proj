@@ -6,4 +6,3 @@ export { AI_COMMANDS_RESULTS } from './aiCommands';
 export { UTILITIES_RESULTS } from './utilities';
 export { EXTENSIONS_RESULTS } from './extensions';
 export { OCTOMUS_SETTINGS_RESULTS } from './octomusSettings';
-export { APPS_RESULTS } from './apps';

@@ -8,7 +8,6 @@ import (
 	"client/backend"
 
 	"github.com/pkg/browser"
-	hook "github.com/robotn/gohook"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -16,6 +15,7 @@ import (
 type App struct {
 	ctx           context.Context
 	windowVisible bool
+	panelMode     bool // true when settings/onboarding are open (larger window)
 	mcpManager    *backend.MCPManager
 	systemService *backend.SystemService
 }
@@ -36,24 +36,26 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.mcpManager = backend.NewMCPManager(ctx)
 	a.systemService = backend.NewSystemService()
-	a.setupGlobalShortcut()
+	// Global shortcut (Option + Space) is now handled natively in tray_darwin.m
 
-	// Hide window on blur
+	// Hide window on blur (only in compact/launcher mode)
 	runtime.EventsOn(ctx, "wails:window-blur", func(data ...interface{}) {
+		if a.panelMode {
+			return // Don't hide when settings/onboarding are open
+		}
 		runtime.WindowHide(a.ctx)
 		a.windowVisible = false
 	})
-}
 
-func (a *App) setupGlobalShortcut() {
-	go func() {
-		// Option (Alt) + Space
-		hook.Register(hook.KeyDown, []string{"alt", "space"}, func(e hook.Event) {
-			a.ToggleWindow()
-		})
-		fmt.Println("Shortcut înregistrat cu succes: Option + Space")
-		<-hook.Process(hook.Start())
-	}()
+	// Listen for window mode changes from frontend
+	runtime.EventsOn(ctx, "octomus:window-mode", func(data ...interface{}) {
+		if len(data) > 0 {
+			if mode, ok := data[0].(string); ok {
+				a.panelMode = (mode == "panel")
+				fmt.Printf("[App] Window mode switched to: %s (panelMode=%v)\n", mode, a.panelMode)
+			}
+		}
+	})
 }
 
 // ToggleWindow hides or shows the main window

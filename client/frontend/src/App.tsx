@@ -7,13 +7,14 @@ import './style.css';
 import './App.css';
 
 function App() {
-    const { isChatMode, currentView, fetchRegistry } = useStore();
+    const isChatMode = useStore(state => state.ui.isChatMode);
+    const currentView = useStore(state => state.ui.currentView);
+    const { core } = useStore();
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        // Load registry on startup. Tools are fetched fresh on every LLM call.
-        fetchRegistry();
-    }, [fetchRegistry]);
+        core.marketplace.initialize();
+    }, [core.marketplace]);
 
     useEffect(() => {
         inputRef.current?.focus();

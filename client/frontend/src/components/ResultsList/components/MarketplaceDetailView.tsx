@@ -1,41 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import * as LucideIcons from 'lucide-react';
-import { IMCPRegistryItem, IMCPTool } from '../../../domain/types';
+import { useStore } from '../../../store/useStore';
+import { ResultIcon } from '../../shared/ResultIcon';
 import './MarketplaceDetailView.css';
 
-interface MarketplaceDetailViewProps {
-    mcp: IMCPRegistryItem;
-    tools: IMCPTool[];
-    fetchingTools: Record<string, boolean>;
-    toolFetchErrors: Record<string, string | null>;
-    connectExtension: (id: string, apiKey?: string) => void;
-    disconnectExtension: (id: string) => void;
-    toggleExtension: (id: string) => void;
-    fetchTools: (id: string) => void;
-    renderIcon: (item: IMCPRegistryItem) => React.ReactNode;
-    installProgress: Record<string, number>;
-}
+export const MarketplaceDetailView: React.FC = () => {
+    const { core } = useStore();
+    const {
+        selectedIntegrationId,
+        selectedIndex // Used by parent or navigation
+    } = useStore(state => state.ui);
+    const {
+        registry,
+        tools: allTools,
+        fetchingTools,
+        toolErrors,
+        installProgress
+    } = useStore(state => state.marketplace);
 
-export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
-    mcp,
-    tools,
-    fetchingTools,
-    toolFetchErrors,
-    connectExtension,
-    disconnectExtension,
-    toggleExtension,
-    fetchTools,
-    renderIcon,
-    installProgress
-}) => {
     const [apiKey, setApiKey] = useState('');
     const [clientId, setClientId] = useState('');
     const [clientSecret, setClientSecret] = useState('');
     const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
 
+    const mcp = registry.find(r => r.id === selectedIntegrationId) || {
+        id: selectedIntegrationId || '',
+        label: 'Loading...',
+        description: '',
+        icon: 'Package',
+        type: 'cloud',
+        status: 'disconnected'
+    } as any;
 
+    const tools = allTools[mcp.id] || [];
     const isFetching = fetchingTools[mcp.id] || false;
-    const fetchError = toolFetchErrors[mcp.id] || null;
+    const fetchError = toolErrors[mcp.id] || null;
 
     const isClientCredentials = (mcp.auth_type === 'oauth2' || mcp.auth_type === 'oauth') &&
         mcp.auth_config?.grant_type === 'client_credentials';
@@ -44,19 +43,18 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
 
     useEffect(() => {
         if (mcp.status === 'connected' && (!tools || tools.length === 0) && !isFetching && !fetchError) {
-            fetchTools(mcp.id);
+            core.marketplace.fetchTools(mcp.id);
         }
-    }, [mcp.id, mcp.status, tools, fetchTools, isFetching, fetchError]);
+    }, [mcp.id, mcp.status, tools, core.marketplace, isFetching, fetchError]);
 
     const handleConnect = () => {
         if (mcp.auth_type === 'api_key' && !apiKey.trim()) return;
         if (isClientCredentials && (!clientId.trim() || !clientSecret.trim())) return;
 
         if (isClientCredentials) {
-            // Pass client_id::client_secret joined — extensionSlice splits them
-            connectExtension(mcp.id, `${clientId.trim()}::${clientSecret.trim()}`);
+            core.marketplace.connect(mcp.id, `${clientId.trim()}::${clientSecret.trim()}`);
         } else {
-            connectExtension(mcp.id, apiKey);
+            core.marketplace.connect(mcp.id, apiKey);
         }
     };
 
@@ -67,7 +65,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                     {mcp.image_url ? (
                         <img src={`http://localhost:8081${mcp.image_url}`} alt={mcp.label} className="app-image" />
                     ) : (
-                        renderIcon(mcp)
+                        <ResultIcon item={mcp} />
                     )}
                 </div>
                 <div className="mcp-detail-header-info">
@@ -85,7 +83,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                         <div className="mcp-header-actions-group">
                             <button
                                 className={`btn-power-toggle ${mcp.isEnabled === false ? 'off' : 'on'}`}
-                                onClick={() => toggleExtension(mcp.id)}
+                                onClick={() => core.marketplace.toggle(mcp.id)}
                                 title={mcp.isEnabled === false ? 'Start Process' : 'Stop Process (Save Memory)'}
                             >
                                 <LucideIcons.Power size={14} />
@@ -98,7 +96,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                                     <button
                                         className="btn-confirm-yes"
                                         onClick={() => {
-                                            disconnectExtension(mcp.id);
+                                            core.marketplace.disconnect(mcp.id);
                                             setShowDisconnectConfirm(false);
                                         }}
                                     >
@@ -125,8 +123,6 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                     )}
                 </div>
             </div>
-
-
 
             <div className="mcp-detail-content">
                 <div className="mcp-description-section">
@@ -217,7 +213,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                                 <button
                                     className="btn-detail-primary"
                                     style={{ marginTop: 12, padding: '8px 20px' }}
-                                    onClick={() => fetchTools(mcp.id)}
+                                    onClick={() => core.marketplace.fetchTools(mcp.id)}
                                 >
                                     Retry
                                 </button>
@@ -275,8 +271,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                         <button
                             className="btn-refresh-tools"
                             onClick={() => {
-                                console.log(`[MarketplaceDetailView] Manual refresh for ${mcp.id}`);
-                                fetchTools(mcp.id);
+                                core.marketplace.fetchTools(mcp.id);
                             }}
                             title="Refresh Tools"
                         >

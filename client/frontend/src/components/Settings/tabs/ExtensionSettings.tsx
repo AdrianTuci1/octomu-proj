@@ -3,16 +3,15 @@ import { useStore } from '../../../store/useStore';
 import { Search, Filter, Plus, ChevronRight } from 'lucide-react';
 
 export const ExtensionSettings: React.FC = () => {
-    const { results, extensions } = useStore();
+    const { extensions } = useStore(state => state.command);
+    const { core } = useStore();
 
     // Filter to show extensions or commands that are relevant
     const allExtensions: any[] = [
-        ...extensions.map(e => ({ ...e, type: 'Extension', isGroup: false })),
+        ...(extensions as any[]).map((e: any) => ({ ...e, type: 'Extension', isGroup: false })),
         { label: 'AI Commands', type: 'Group', isGroup: true },
         { label: 'Applications', type: 'Group', isGroup: true }
     ];
-
-    const { toggleExtension } = useStore();
 
     return (
         <div className="settings-tab-content extensions-settings">
@@ -61,7 +60,7 @@ export const ExtensionSettings: React.FC = () => {
                                         <input
                                             type="checkbox"
                                             checked={ext.isEnabled !== false}
-                                            onChange={() => toggleExtension(ext.id)}
+                                            onChange={() => core.marketplace.toggle(ext.id)}
                                         />
                                     )}
                                 </td>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { IMCPRegistryItem } from '../../../domain/types';
+import { ResultIcon } from '../../shared/ResultIcon';
 import './IntegrationCard.css';
 
 interface IntegrationCardProps {
@@ -7,15 +8,13 @@ interface IntegrationCardProps {
     isKeyboardFocused?: boolean;
     selectedIntegrationId: string | null;
     setSelectedIntegrationId: (id: string | null) => void;
-    renderIcon: (item: IMCPRegistryItem) => React.ReactNode;
 }
 
 export const IntegrationCard: React.FC<IntegrationCardProps> = ({
     app,
     isKeyboardFocused = false,
     selectedIntegrationId,
-    setSelectedIntegrationId,
-    renderIcon
+    setSelectedIntegrationId
 }) => {
     const isSelected = selectedIntegrationId === app.id;
 
@@ -29,7 +28,7 @@ export const IntegrationCard: React.FC<IntegrationCardProps> = ({
                     {app.image_url ? (
                         <img src={`http://localhost:8081${app.image_url}`} alt={app.label} className="app-image" />
                     ) : (
-                        renderIcon(app)
+                        <ResultIcon item={app} />
                     )}
                 </div>
                 <div className="integration-info">

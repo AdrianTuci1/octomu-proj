@@ -1,28 +1,14 @@
 import React from 'react';
 import * as LucideIcons from 'lucide-react';
 import { IntegrationCard } from './IntegrationCard';
-import { IMCPRegistryItem } from '../../../domain/types';
+import { useStore } from '../../../store/useStore';
 import './MarketplaceView.css';
 
-interface MarketplaceViewProps {
-    registry: IMCPRegistryItem[];
-    selectedIntegrationId: string | null;
-    selectedIndex: number;
-    setSelectedIntegrationId: (id: string | null) => void;
-    connectExtension: (id: string) => void;
-    tools: Record<string, any[]>;
-    renderIcon: (item: IMCPRegistryItem) => React.ReactNode;
-}
+export const MarketplaceView: React.FC = () => {
+    const { core } = useStore();
+    const { registry } = useStore(state => state.marketplace);
+    const { selectedIndex, selectedIntegrationId } = useStore(state => state.ui);
 
-export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
-    registry,
-    selectedIntegrationId,
-    selectedIndex,
-    setSelectedIntegrationId,
-    connectExtension,
-    tools,
-    renderIcon
-}) => {
     return (
         <div className="scroll-content integrations-view">
             <div className="section-title">Integrations Marketplace</div>
@@ -39,8 +25,10 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
                             app={app}
                             isKeyboardFocused={index === selectedIndex}
                             selectedIntegrationId={selectedIntegrationId}
-                            setSelectedIntegrationId={setSelectedIntegrationId}
-                            renderIcon={renderIcon}
+                            setSelectedIntegrationId={(id) => {
+                                core.navigation.setSelectedIntegrationId(id);
+                                if (id) core.navigation.setCurrentView('mcpDetail');
+                            }}
                         />
                     ))}
                 </div>
@@ -48,4 +36,3 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
         </div>
     );
 };
-

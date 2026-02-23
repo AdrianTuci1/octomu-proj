@@ -3,12 +3,13 @@ import { useStore } from '../../../store/useStore';
 import { Monitor, Moon, Sun, MonitorCheck } from 'lucide-react';
 
 export const GeneralSettings: React.FC = () => {
-    const {
-        appearance, setAppearance,
-        windowMode, setWindowMode,
-        hotkey, setHotkey,
-        launchAtLogin, setLaunchAtLogin
-    } = useStore();
+    const { appearance, windowMode, hotkey, launchAtLogin } = useStore(state => state.settings);
+    const { core } = useStore();
+
+    const setAppearance = (v: 'light' | 'dark' | 'system') => core.settings.setAppearance(v);
+    const setWindowMode = (v: 'default' | 'compact') => core.settings.setWindowMode(v);
+    const setHotkey = (v: string) => core.settings.setHotkey(v);
+    const setLaunchAtLogin = (v: boolean) => core.settings.setLaunchAtLogin(v);
 
     return (
         <div className="settings-tab-content">

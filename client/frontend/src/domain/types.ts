@@ -1,5 +1,5 @@
 export type MessageType = 'user' | 'ai' | 'system';
-export type ViewType = 'main' | 'snippets' | 'history' | 'authorizations' | 'chatHistory' | 'mcpDetail' | 'settings';
+export type ViewType = 'main' | 'snippets' | 'history' | 'authorizations' | 'chatHistory' | 'mcpDetail' | 'settings' | 'onboarding';
 
 export interface IMessage {
     id: string;

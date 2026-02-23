@@ -6,14 +6,47 @@ extern void quitAppFromC();
 @interface TrayHandler : NSObject
 - (void)onToggle:(id)sender;
 - (void)onQuit:(id)sender;
+- (void)setupGlobalHotkey;
 @end
 
-@implementation TrayHandler
+@implementation TrayHandler {
+  NSEvent *_eventMonitor;
+}
+
 - (void)onToggle:(id)sender {
   toggleWindowFromC();
 }
+
 - (void)onQuit:(id)sender {
   quitAppFromC();
+}
+
+- (void)setupGlobalHotkey {
+  // Remove existing monitor if any
+  if (_eventMonitor) {
+    [NSEvent removeMonitor:_eventMonitor];
+    _eventMonitor = nil;
+  }
+
+  // Register global event monitor for key events
+  _eventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskKeyDown
+                                                        handler:^(NSEvent *event) {
+    // Check for Option + Space
+    if (event.keyCode == 49 && // Space key
+        (event.modifierFlags & NSEventModifierFlagOption)) {
+      NSLog(@"[NATIVE] Option + Space detected!");
+      toggleWindowFromC();
+    }
+  }];
+
+  NSLog(@"[NATIVE] Global hotkey monitor installed for Option + Space");
+}
+
+- (void)dealloc {
+  if (_eventMonitor) {
+    [NSEvent removeMonitor:_eventMonitor];
+  }
+  [super dealloc];
 }
 @end
 
@@ -60,6 +93,9 @@ void SetupNativeTray() {
 
     // Set as accessory to hide from Dock
     [NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
+
+    // Setup global hotkey (Option + Space)
+    [handler setupGlobalHotkey];
 
     NSLog(@"[NATIVE] SetupNativeTray finished. Title set to: %@",
           statusItem.button.title);

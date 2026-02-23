@@ -2,33 +2,22 @@ import React from 'react';
 import { IResultItem } from '../../../domain/types';
 import { HistoryView } from './HistoryView';
 import { MessageSquare } from 'lucide-react';
+import { useStore } from '../../../store/useStore';
+import { ResultIcon } from '../../shared/ResultIcon';
 import './HistoryView.css';
 
 interface ResultsGroupsProps {
-    sections: Record<string, IResultItem[]>;
     filteredResults: IResultItem[];
-    selectedIndex: number;
-    typingQuery: string;
-    chatSessions: any[];
-    handleResultSelection: (item: IResultItem) => void;
-    selectChat: (id: string) => void;
-    renderIcon: (item: IResultItem) => React.ReactNode;
 }
 
-export const ResultsGroups: React.FC<ResultsGroupsProps> = (props) => {
-    const {
-        filteredResults,
-        selectedIndex,
-        typingQuery,
-        chatSessions,
-        handleResultSelection,
-        selectChat,
-        renderIcon,
-    } = props;
+export const ResultsGroups: React.FC<ResultsGroupsProps> = ({ filteredResults }) => {
+    const { core } = useStore();
+    const { selectedIndex, typingQuery } = useStore(state => state.ui);
+    const { chatSessions } = useStore(state => state.chat);
 
     // Dispatch to HistoryView if searching
     if (typingQuery.trim() !== '') {
-        return <HistoryView {...props} />;
+        return <HistoryView filteredResults={filteredResults} />;
     }
 
     // Welcome item is now prepended to filteredResults at index 0 in the parent
@@ -40,12 +29,20 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = (props) => {
         .map(id => filteredResults.find(r => r.id === id))
         .filter((r): r is IResultItem => !!r);
 
+    // Integrations: items with type 'ai_extension' (extensions, AI commands, etc.)
+    const integrations = filteredResults.filter(item =>
+        item.type === 'ai_extension' &&
+        !suggestionIds.includes(item.id) &&
+        item.id !== 'welcome-walkthrough'
+    );
+
     // Apps: items from the 'Apps' category (Finder applications)
     const apps = filteredResults.filter(item => item.category === 'Apps');
 
-    // Commands: all items except those already in suggestions, apps, or the welcome item
+    // Commands: all items except those already in suggestions, integrations, apps, or the welcome item
     const commands = filteredResults.filter(item =>
         !suggestionIds.includes(item.id) &&
+        item.type !== 'ai_extension' &&
         item.category !== 'Apps' &&
         item.id !== 'welcome-walkthrough'
     );
@@ -59,10 +56,10 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = (props) => {
             <div
                 key={item.id}
                 className={`list-item result-item ${isActive ? 'active' : ''}`}
-                onClick={() => handleResultSelection(item)}
+                onClick={() => core.results.handleResultSelection(item)}
             >
                 <div className="item-icon" data-category={item.category}>
-                    {renderIcon(item)}
+                    <ResultIcon item={item} />
                 </div>
                 <div className="item-content">
                     <div className="item-main">
@@ -94,7 +91,15 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = (props) => {
                     </div>
                 )}
 
-                {/* 3. Commands */}
+                {/* 3. Integrations */}
+                {integrations.length > 0 && (
+                    <div className="result-section">
+                        <div className="section-title">Integrations</div>
+                        {integrations.map(item => renderItem(item))}
+                    </div>
+                )}
+
+                {/* 4. Commands */}
                 {commands.length > 0 && (
                     <div className="result-section">
                         <div className="section-title">Commands</div>
@@ -120,7 +125,7 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = (props) => {
                                 <div
                                     key={session.id}
                                     className={`list-item chat-session-item ${selectedIndex === historyIndex ? 'active' : ''}`}
-                                    onClick={() => selectChat(session.id)}
+                                    onClick={() => core.chat.selectChat(session.id)}
                                 >
                                     <div className="item-icon">
                                         <MessageSquare size={14} />

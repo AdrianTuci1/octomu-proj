@@ -9,25 +9,18 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
+    const { core } = useStore();
     const {
         currentView,
         isChatMode,
         showMentions,
         activeMentions,
-        toolRecommendations, // Added
-        extensions, // Added
-        selectedIndex, // Added
+        toolRecommendations,
         query,
         suggestion,
-        setQuery,
-        removeMention,
-        handleChatSubmit,
-        goBack,
-        toggleChat,
-        moveSelectionUp,
-        moveSelectionDown,
-        resetChat
-    } = useStore();
+        selectedIndex
+    } = useStore(state => state.ui);
+    const { extensions } = useStore(state => state.command);
 
     // Determine if we are currently typing a mention trigger
     const lastWord = query.split(' ').pop() || '';
@@ -48,35 +41,35 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
 
     const acceptSuggestion = () => {
         if (suggestion) {
-            setQuery(query + suggestion);
+            core.navigation.setQuery(query + suggestion);
         }
     };
 
     const onKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Backspace' && query === '') {
             if (activeMentions.length > 0) {
-                removeMention(activeMentions[activeMentions.length - 1].id);
+                core.navigation.removeMention(activeMentions[activeMentions.length - 1].id);
             } else if (currentView !== 'chatHistory') {
-                goBack();
+                core.navigation.goBack();
             }
             return;
         }
 
         if (e.key === 'Tab') {
             e.preventDefault();
-            toggleChat();
+            core.navigation.toggleChat();
             return;
         }
 
         if (e.key === 'ArrowUp') {
             e.preventDefault();
-            moveSelectionUp();
+            core.navigation.moveSelectionUp();
             return;
         }
 
         if (e.key === 'ArrowDown') {
             e.preventDefault();
-            moveSelectionDown();
+            core.navigation.moveSelectionDown();
             return;
         }
 
@@ -89,19 +82,19 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
         }
 
         if (e.key === 'ArrowLeft' && currentView !== 'chatHistory') {
-            goBack();
+            core.navigation.goBack();
             return;
         }
 
         if (e.key === 'Enter') {
-            handleChatSubmit();
+            core.command.handleChatSubmit();
         }
     };
 
     return (
         <div className={`top-bar ${isChatMode ? 'chat-mode' : ''}`}>
             {currentView !== 'chatHistory' && (
-                <button className="back-button" onClick={goBack}>
+                <button className="back-button" onClick={() => core.navigation.goBack()}>
                     <ChevronLeft size={18} />
                 </button>
             )}
@@ -111,7 +104,7 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
                         <div key={m.id} className="mention-chip">
                             <span className="chip-at">@</span>
                             <span className="chip-label">{m.handle}</span>
-                            <button className="chip-remove" onClick={() => removeMention(m.id)}>
+                            <button className="chip-remove" onClick={() => core.navigation.removeMention(m.id)}>
                                 <X size={10} />
                             </button>
                         </div>
@@ -137,7 +130,7 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
                             className="search-input"
                             placeholder={isChatMode ? "Ask Octomus anything..." : "Search for apps and commands..."}
                             value={isTypingMention ? lastWord : query}
-                            onChange={(e) => setQuery(e.target.value)}
+                            onChange={(e) => core.navigation.setQuery(e.target.value)}
                             onKeyDown={onKeyDown}
                             style={isTypingMention ? { opacity: 0, position: 'absolute', width: '1px' } : {}}
                         />
@@ -148,7 +141,7 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
                                     <div
                                         key={i}
                                         className="recommendation-chip"
-                                        onClick={() => setQuery(rec + ' ')}
+                                        onClick={() => core.navigation.setQuery(rec + ' ')}
                                     >
                                         {rec}
                                     </div>
@@ -159,12 +152,12 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
                 </div>
 
                 {!isChatMode ? (
-                    <div className="tab-hint-outer" onClick={toggleChat}>
+                    <div className="tab-hint-outer" onClick={() => core.navigation.toggleChat()}>
                         <span className="hint-text">Ask AI</span>
                         <div className="hint-key">Tab</div>
                     </div>
                 ) : (
-                    <div className="tab-hint-outer active" onClick={toggleChat}>
+                    <div className="tab-hint-outer active" onClick={() => core.navigation.toggleChat()}>
                         <span className="hint-text">Search</span>
                         <div className="hint-key">Tab</div>
                     </div>
@@ -174,7 +167,7 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
             {isChatMode && (
                 <button
                     className="reset-chat-button"
-                    onClick={resetChat}
+                    onClick={() => core.chat.resetChat()}
                     title="Reset Conversation"
                 >
                     <RotateCcw size={18} />

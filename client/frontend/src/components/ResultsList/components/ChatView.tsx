@@ -1,24 +1,14 @@
 import React from 'react';
 import { Layout } from 'lucide-react';
 import { InterpreterBlock } from '../../InterpreterBlock';
-import { IMessage, IPendingCommand } from '../../../domain/types';
+import { useStore } from '../../../store/useStore';
 import './ChatView.css';
 
-interface ChatViewProps {
-    conversation: IMessage[];
-    pendingCommand: IPendingCommand | null;
-    executeCommand: () => void;
-    rejectCommand: () => void;
-    allowTool: (name: string) => void;
-}
+export const ChatView: React.FC = () => {
+    const { core } = useStore();
+    const { conversation } = useStore(state => state.chat);
+    const { pendingCommand, allowTool, rejectCommand } = useStore(state => state.command);
 
-export const ChatView: React.FC<ChatViewProps> = ({
-    conversation,
-    pendingCommand,
-    executeCommand,
-    rejectCommand,
-    allowTool
-}) => {
     const scrollRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
@@ -61,7 +51,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 <div className="pending-area">
                     <InterpreterBlock
                         pendingCommand={pendingCommand}
-                        onApprove={executeCommand}
+                        onApprove={() => core.command.executeCommand()}
                         onReject={rejectCommand}
                         onAlwaysApprove={allowTool}
                     />

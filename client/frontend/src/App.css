@@ -1,20 +1,21 @@
 #root {
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-color);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    border: none;
 }
 
 .app-container {
     display: flex;
     flex-direction: column;
+     background-color: var(--bg-color);
     flex: 1;
     height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }

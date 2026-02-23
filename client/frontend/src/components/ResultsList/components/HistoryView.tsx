@@ -1,30 +1,20 @@
 import React from 'react';
 import * as LucideIcons from 'lucide-react';
 import { MessageSquare } from 'lucide-react';
-import { IResultItem, IChatSession } from '../../../domain/types';
+import { IResultItem } from '../../../domain/types';
+import { useStore } from '../../../store/useStore';
+import { ResultIcon } from '../../shared/ResultIcon';
 import './HistoryView.css';
 
 interface HistoryViewProps {
-    sections: Record<string, IResultItem[]>;
     filteredResults: IResultItem[];
-    selectedIndex: number;
-    typingQuery: string;
-    chatSessions: IChatSession[];
-    handleResultSelection: (item: IResultItem) => void;
-    selectChat: (id: string) => void;
-    renderIcon: (item: IResultItem) => React.ReactNode;
 }
 
-export const HistoryView: React.FC<HistoryViewProps> = ({
-    sections,
-    filteredResults,
-    selectedIndex,
-    typingQuery,
-    chatSessions,
-    handleResultSelection,
-    selectChat,
-    renderIcon
-}) => {
+export const HistoryView: React.FC<HistoryViewProps> = ({ filteredResults }) => {
+    const { core } = useStore();
+    const { selectedIndex, typingQuery } = useStore(state => state.ui);
+    const { chatSessions } = useStore(state => state.chat);
+
     return (
         <div className="scroll-content">
             <div className="sections-container">
@@ -36,10 +26,10 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
                             <div
                                 key={item.id}
                                 className={`list-item result-item ${selectedIndex === globalIndex ? 'active' : ''}`}
-                                onClick={() => handleResultSelection(item)}
+                                onClick={() => core.results.handleResultSelection(item)}
                             >
                                 <div className="item-icon" data-category={item.category}>
-                                    {renderIcon(item)}
+                                    <ResultIcon item={item} />
                                 </div>
                                 <div className="item-content">
                                     <div className="item-main">
@@ -68,7 +58,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
                             <div
                                 key={session.id}
                                 className={`list-item chat-session-item ${selectedIndex === historyIndex ? 'active' : ''}`}
-                                onClick={() => selectChat(session.id)}
+                                onClick={() => core.chat.selectChat(session.id)}
                             >
                                 <div className="item-icon">
                                     <MessageSquare size={14} />
