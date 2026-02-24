@@ -5,11 +5,11 @@ import { IExtension } from '../store/storeTypes';
 import './MentionsOverlay.css';
 
 export const MentionsOverlay: React.FC = () => {
-    const { extensions } = useStore(state => state.command);
-    const { selectedIndex, query } = useStore(state => state.ui);
+    const extensions = useStore(state => state.command?.extensions) ?? [];
+    const { selectedIndex, query } = useStore(state => state.ui) ?? {};
     const { core } = useStore();
 
-    const lastWord = query.split(' ').pop() || '';
+    const lastWord = (query ?? '').split(' ').pop() || '';
     const filter = lastWord.startsWith('@') ? lastWord.slice(1).toLowerCase() : '';
 
     // Extensions are already ordered with LLM first in commandSlice

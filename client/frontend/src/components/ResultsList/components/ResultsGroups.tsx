@@ -12,13 +12,8 @@ interface ResultsGroupsProps {
 
 export const ResultsGroups: React.FC<ResultsGroupsProps> = ({ filteredResults }) => {
     const { core } = useStore();
-    const { selectedIndex, typingQuery } = useStore(state => state.ui);
-    const { chatSessions } = useStore(state => state.chat);
-
-    // Dispatch to HistoryView if searching
-    if (typingQuery.trim() !== '') {
-        return <HistoryView filteredResults={filteredResults} />;
-    }
+    const { selectedIndex, typingQuery } = useStore(state => state.ui) ?? {};
+    const chatSessions = useStore(state => state.chat?.chatSessions) ?? [];
 
     // Build a flat list of selectable items (excluding welcome walkthrough for navigation)
     // Welcome walkthrough is visible but not selectable via keyboard navigation
@@ -49,6 +44,7 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = ({ filteredResults })
     );
 
     // Create flat list for selection (excluding welcome walkthrough)
+    // NOTE: This useMemo must be called before any early returns to comply with React's Rules of Hooks
     const selectableItems = useMemo(() => {
         return [
             ...suggestions,
@@ -57,6 +53,11 @@ export const ResultsGroups: React.FC<ResultsGroupsProps> = ({ filteredResults })
             ...apps
         ];
     }, [suggestions, integrations, commands, apps]);
+
+    // Dispatch to HistoryView if searching - MUST be after all hooks are called
+    if ((typingQuery ?? '').trim() !== '') {
+        return <HistoryView filteredResults={filteredResults} />;
+    }
 
     const getItemIndex = (item: IResultItem): number => {
         return selectableItems.findIndex(r => r.id === item.id);

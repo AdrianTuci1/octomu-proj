@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronLeft, X, RotateCcw } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { MentionsOverlay } from './MentionsOverlay';
+import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation';
 import './TopBar.css';
 
 interface TopBarProps {
@@ -9,18 +10,29 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
-    const { core } = useStore();
+    // Single useStore call - get all state at once
+    const { ui, command, core } = useStore();
     const {
         currentView,
         isChatMode,
-        showMentions,
         activeMentions,
         toolRecommendations,
         query,
         suggestion,
         selectedIndex
-    } = useStore(state => state.ui);
-    const { extensions } = useStore(state => state.command);
+    } = ui;
+    const { extensions } = command;
+
+    // Keyboard navigation logic extracted to custom hook
+    const { onKeyDown } = useKeyboardNavigation({
+        core,
+        query,
+        suggestion,
+        isChatMode,
+        activeMentions,
+        currentView,
+        inputRef
+    });
 
     // Determine if we are currently typing a mention trigger
     const lastWord = query.split(' ').pop() || '';
@@ -38,62 +50,6 @@ export const TopBar: React.FC<TopBarProps> = ({ inputRef }) => {
             selectedExtensionLabel = filteredExts[selectedIndex].label;
         }
     }
-
-    const acceptSuggestion = () => {
-        if (suggestion) {
-            core.navigation.setQuery(query + suggestion);
-        }
-    };
-
-    const onKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Backspace' && query === '') {
-            if (activeMentions.length > 0) {
-                core.navigation.removeMention(activeMentions[activeMentions.length - 1].id);
-            } else if (currentView !== 'chatHistory') {
-                core.navigation.goBack();
-            }
-            return;
-        }
-
-        if (e.key === 'Tab') {
-            e.preventDefault();
-            core.navigation.toggleChat();
-            return;
-        }
-
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            core.navigation.moveSelectionUp();
-            return;
-        }
-
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            core.navigation.moveSelectionDown();
-            return;
-        }
-
-        if (e.key === 'ArrowRight' || e.key === 'End') {
-            if (suggestion && inputRef.current?.selectionStart === query.length) {
-                e.preventDefault();
-                acceptSuggestion();
-            }
-            return;
-        }
-
-        if (e.key === 'ArrowLeft' && currentView !== 'chatHistory') {
-            core.navigation.goBack();
-            return;
-        }
-
-        if (e.key === 'Enter') {
-            if (isChatMode) {
-                core.command.handleChatSubmit();
-            } else {
-                core.navigation.handleEnterSelection();
-            }
-        }
-    };
 
     return (
         <div className={`top-bar ${isChatMode ? 'chat-mode' : ''}`}>

@@ -3,7 +3,7 @@ import { useStore } from '../../../store/useStore';
 import { Search, Filter, Plus, ChevronRight } from 'lucide-react';
 
 export const ExtensionSettings: React.FC = () => {
-    const { extensions } = useStore(state => state.command);
+    const extensions = useStore(state => state.command?.extensions) ?? [];
     const { core } = useStore();
 
     // Filter to show extensions or commands that are relevant

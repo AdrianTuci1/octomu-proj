@@ -4,10 +4,11 @@ import { Settings, Puzzle, Sparkles, Zap, User, Cloud, Shield, Info, X } from 'l
 import { GeneralSettings } from './tabs/GeneralSettings';
 import { AISettings } from './tabs/AISettings';
 import { ExtensionSettings } from './tabs/ExtensionSettings';
+import { EventsEmit } from '../../../wailsjs/runtime/runtime';
 import './SettingsView.css';
 
 export const SettingsView: React.FC = () => {
-    const { activeSettingsTab } = useStore(state => state.settings);
+    const activeSettingsTab = useStore(state => state.settings?.activeSettingsTab) ?? 'general';
     const { core } = useStore();
 
     const tabs: Array<{ id: string, label: string, icon: any, badge?: string }> = [
@@ -30,12 +31,17 @@ export const SettingsView: React.FC = () => {
         }
     };
 
+    const handleClose = () => {
+        // Emit event to close the panel and return to compact mode
+        EventsEmit('octomus:close-panel');
+    };
+
     return (
-        <div className="settings-overlay">
+        <div className="settings-panel">
             <div className="settings-window">
                 <div className="settings-header">
-                    <div className="settings-title">Raycast Settings</div>
-                    <button className="close-settings" onClick={() => core.navigation.goBack()}>
+                    <div className="settings-title">Octomus Settings</div>
+                    <button className="close-settings" onClick={handleClose}>
                         <X size={16} />
                     </button>
                     <div className="settings-tabs">

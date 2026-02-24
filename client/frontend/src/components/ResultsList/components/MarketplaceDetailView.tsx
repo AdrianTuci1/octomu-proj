@@ -9,14 +9,12 @@ export const MarketplaceDetailView: React.FC = () => {
     const {
         selectedIntegrationId,
         selectedIndex // Used by parent or navigation
-    } = useStore(state => state.ui);
-    const {
-        registry,
-        tools: allTools,
-        fetchingTools,
-        toolErrors,
-        installProgress
-    } = useStore(state => state.marketplace);
+    } = useStore(state => state.ui) ?? {};
+    const registry = useStore(state => state.marketplace?.registry) ?? [];
+    const allTools = useStore(state => state.marketplace?.tools) ?? {};
+    const fetchingTools = useStore(state => state.marketplace?.fetchingTools) ?? {};
+    const toolErrors = useStore(state => state.marketplace?.toolErrors) ?? {};
+    const installProgress = useStore(state => state.marketplace?.installProgress) ?? {};
 
     const [apiKey, setApiKey] = useState('');
     const [clientId, setClientId] = useState('');

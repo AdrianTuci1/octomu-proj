@@ -34,8 +34,8 @@ export class NavigationManager {
 
     setQuery(query: string) {
         const state = this.store.getState();
-        const { results } = state.results;
-        const { isChatMode } = state.ui;
+        const results = state.results?.results ?? [];
+        const isChatMode = state.ui?.isChatMode ?? false;
 
         let suggestion = '';
         let showMentions = false;
@@ -72,7 +72,7 @@ export class NavigationManager {
 
     addMention(extension: IExtension) {
         const state = this.store.getState();
-        const { activeMentions } = state.ui;
+        const activeMentions = state.ui?.activeMentions ?? [];
 
         if (!activeMentions.find((m: any) => m.id === extension.id)) {
             let recommendations: string[] = [];
@@ -93,7 +93,7 @@ export class NavigationManager {
 
     removeMention(id: string) {
         const state = this.store.getState();
-        const { activeMentions } = state.ui;
+        const activeMentions = state.ui?.activeMentions ?? [];
         this.setUIState({
             activeMentions: activeMentions.filter((m: any) => m.id !== id),
             toolRecommendations: []
@@ -108,7 +108,7 @@ export class NavigationManager {
     }
 
     goBack() {
-        const { currentView } = this.store.getState().ui;
+        const currentView = this.store.getState().ui?.currentView;
         if (PANEL_VIEWS.includes(currentView)) {
             // Return from panel views to main search
             this.switchToSearch();
@@ -120,7 +120,7 @@ export class NavigationManager {
     }
 
     toggleChat() {
-        const { isChatMode } = this.store.getState().ui;
+        const isChatMode = this.store.getState().ui?.isChatMode;
         if (isChatMode) {
             this.switchToSearch();
         } else {
@@ -159,24 +159,24 @@ export class NavigationManager {
 
     moveSelectionUp() {
         const state = this.store.getState();
-        const { selectedIndex, showMentions, currentView } = state.ui;
+        const { selectedIndex, showMentions, currentView } = state.ui ?? {};
 
         if (showMentions || currentView === 'authorizations') {
-            this.setUIState({ selectedIndex: Math.max(0, selectedIndex - 1) });
+            this.setUIState({ selectedIndex: Math.max(0, (selectedIndex ?? 0) - 1) });
             return;
         }
 
-        const newIndex = Math.max(0, selectedIndex - 1);
+        const newIndex = Math.max(0, (selectedIndex ?? 0) - 1);
         this.setUIState({ selectedIndex: newIndex });
     }
 
     moveSelectionDown() {
         const state = this.store.getState();
-        const { selectedIndex, typingQuery, showMentions, currentView } = state.ui;
-        const { results } = state.results;
-        const { chatSessions } = state.chat;
-        const { extensions } = state.command;
-        const { registry } = state.marketplace;
+        const { selectedIndex, typingQuery, showMentions, currentView } = state.ui ?? {};
+        const results = state.results?.results ?? [];
+        const chatSessions = state.chat?.chatSessions ?? [];
+        const extensions = state.command?.extensions ?? [];
+        const registry = state.marketplace?.registry ?? [];
 
         if (showMentions) {
             const lastWord = typingQuery.split(' ').pop() || '';
@@ -209,12 +209,13 @@ export class NavigationManager {
 
     handleEnterSelection() {
         const state = this.store.getState();
-        const { selectedIndex, typingQuery, currentView, showMentions } = state.ui;
-        const { results } = state.results;
-        const { chatSessions } = state.chat;
-        const { extensions } = state.command;
-        const { registry } = state.marketplace;
-        const { results: resultsManager, chat: chatManager } = state.core;
+        const { selectedIndex, typingQuery, currentView, showMentions } = state.ui ?? {};
+        const results = state.results?.results ?? [];
+        const chatSessions = state.chat?.chatSessions ?? [];
+        const extensions = state.command?.extensions ?? [];
+        const registry = state.marketplace?.registry ?? [];
+        const resultsManager = state.core?.results;
+        const chatManager = state.core?.chat;
 
         // Handle mentions overlay selection
         if (showMentions) {

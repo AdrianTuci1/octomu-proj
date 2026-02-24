@@ -19,14 +19,14 @@ export class ChatManager {
     }
 
     addMessage(message: IMessage) {
-        const { conversation } = this.store.getState().chat;
+        const conversation = this.store.getState().chat?.conversation ?? [];
         this.setChatState({
             conversation: [...conversation, message]
         });
     }
 
     selectChat(id: string) {
-        const { chatSessions } = this.store.getState().chat;
+        const chatSessions = this.store.getState().chat?.chatSessions ?? [];
         const session = chatSessions.find(s => s.id === id);
         if (session) {
             console.log(`[ChatManager] Selecting chat: ${session.title}`);

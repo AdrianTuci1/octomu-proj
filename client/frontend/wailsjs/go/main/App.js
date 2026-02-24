@@ -6,6 +6,10 @@ export function CheckBinary(arg1) {
   return window['go']['main']['App']['CheckBinary'](arg1);
 }
 
+export function ClosePanel() {
+  return window['go']['main']['App']['ClosePanel']();
+}
+
 export function DeleteCredential(arg1) {
   return window['go']['main']['App']['DeleteCredential'](arg1);
 }
@@ -56,6 +60,14 @@ export function ListToolsRemote(arg1, arg2, arg3) {
 
 export function OpenOAuthBrowser(arg1) {
   return window['go']['main']['App']['OpenOAuthBrowser'](arg1);
+}
+
+export function OpenOnboarding() {
+  return window['go']['main']['App']['OpenOnboarding']();
+}
+
+export function OpenSettings() {
+  return window['go']['main']['App']['OpenSettings']();
 }
 
 export function SaveCredential(arg1, arg2) {

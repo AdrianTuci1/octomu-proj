@@ -5,13 +5,12 @@ import { ChatView } from './components/ChatView';
 import { MarketplaceView } from './components/MarketplaceView';
 import { MarketplaceDetailView } from './components/MarketplaceDetailView';
 import { HistoryView } from './components/HistoryView';
-import { SettingsView } from '../Settings/SettingsView';
 import './ResultsList.css';
 
 export const ResultsList: React.FC = () => {
-    const currentView = useStore(state => state.ui.currentView);
-    const results = useStore(state => state.results.results);
-    const selectedIndex = useStore(state => state.ui.selectedIndex);
+    const currentView = useStore(state => state.ui?.currentView ?? 'chatHistory');
+    const results = useStore(state => state.results?.results ?? []);
+    const selectedIndex = useStore(state => state.ui?.selectedIndex ?? 0);
     const { core } = useStore();
 
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -48,9 +47,6 @@ export const ResultsList: React.FC = () => {
 
             case 'mcpDetail':
                 return <MarketplaceDetailView />;
-
-            case 'settings':
-                return <SettingsView />;
 
             case 'history':
                 return (

@@ -1,6 +1,7 @@
 import { IResultItem } from '../../../domain/types';
 import { AppState } from '../../../store/storeTypes';
 import { IResultsInfrastructure } from '../infrastructure/ResultsInfrastructure';
+import { EventsEmit } from '../../../../wailsjs/runtime/runtime';
 
 export interface IResultsStore {
     getState(): AppState;
@@ -73,7 +74,10 @@ export class ResultsManager {
         }
 
         const uiCommandMap: Record<string, () => void> = {
-            'ui:settings': () => this.setUIState({ currentView: 'settings' }),
+            'ui:settings': () => {
+                // Open settings in a larger panel window
+                EventsEmit('octomus:open-settings');
+            },
             'ui:confetti': () => console.log('Confetti!'),
             'ui:qr_code': () => {
                 this.setUIState({
@@ -82,7 +86,9 @@ export class ResultsManager {
                 });
                 window.dispatchEvent(new CustomEvent('octomus:qr_code'));
             },
-            'ui:manage_models': () => this.setUIState({ currentView: 'settings' }),
+            'ui:manage_models': () => {
+                EventsEmit('octomus:open-settings');
+            },
         };
 
         if (uiCommandMap[command]) {

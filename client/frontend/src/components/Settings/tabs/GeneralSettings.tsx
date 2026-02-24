@@ -3,7 +3,7 @@ import { useStore } from '../../../store/useStore';
 import { Monitor, Moon, Sun, MonitorCheck } from 'lucide-react';
 
 export const GeneralSettings: React.FC = () => {
-    const { appearance, windowMode, hotkey, launchAtLogin } = useStore(state => state.settings);
+    const { appearance, windowMode, hotkey, launchAtLogin } = useStore(state => state.settings) ?? {};
     const { core } = useStore();
 
     const setAppearance = (v: 'light' | 'dark' | 'system') => core.settings.setAppearance(v);

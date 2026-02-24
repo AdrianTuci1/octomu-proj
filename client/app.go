@@ -18,12 +18,14 @@ type App struct {
 	panelMode     bool // true when settings/onboarding are open (larger window)
 	mcpManager    *backend.MCPManager
 	systemService *backend.SystemService
+	panelManager  *backend.PanelWindowManager
 }
 
 // NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{
 		windowVisible: true,
+		panelManager:  backend.NewPanelWindowManager(),
 	}
 }
 
@@ -36,6 +38,7 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.mcpManager = backend.NewMCPManager(ctx)
 	a.systemService = backend.NewSystemService()
+	a.panelManager.SetContext(ctx)
 	// Global shortcut (Option + Space) is now handled natively in tray_darwin.m
 
 	// Hide window on blur (only in compact/launcher mode)
@@ -55,6 +58,21 @@ func (a *App) startup(ctx context.Context) {
 				fmt.Printf("[App] Window mode switched to: %s (panelMode=%v)\n", mode, a.panelMode)
 			}
 		}
+	})
+
+	// Listen for open settings event from frontend
+	runtime.EventsOn(ctx, "octomus:open-settings", func(data ...interface{}) {
+		a.OpenSettings()
+	})
+
+	// Listen for open onboarding event from frontend
+	runtime.EventsOn(ctx, "octomus:open-onboarding", func(data ...interface{}) {
+		a.OpenOnboarding()
+	})
+
+	// Listen for close panel event from frontend
+	runtime.EventsOn(ctx, "octomus:close-panel", func(data ...interface{}) {
+		a.ClosePanel()
 	})
 }
 
@@ -166,4 +184,33 @@ func (a *App) ExecuteSystemCommand(cmd string) (string, error) {
 // GetInstalledApps returns a list of installed macOS applications
 func (a *App) GetInstalledApps() (string, error) {
 	return a.systemService.ExecuteCommand("list_apps")
+}
+
+// ─── Panel Window Management ─────────────────────────────────────────────────
+
+// OpenSettings opens the Settings panel
+func (a *App) OpenSettings() error {
+	return a.panelManager.OpenPanel(backend.PanelSettings)
+}
+
+// OpenOnboarding opens the Onboarding panel
+func (a *App) OpenOnboarding() error {
+	return a.panelManager.OpenPanel(backend.PanelOnboarding)
+}
+
+// ClosePanel closes the current panel and returns to compact mode
+func (a *App) ClosePanel() error {
+	err := a.panelManager.ClosePanel()
+	if err != nil {
+		return err
+	}
+
+	// Reset window to compact launcher size
+	runtime.WindowSetSize(a.ctx, 750, 450)
+	runtime.WindowSetAlwaysOnTop(a.ctx, true)
+	runtime.WindowCenter(a.ctx)
+	a.panelMode = false
+	a.windowVisible = true
+
+	return nil
 }

@@ -6,8 +6,8 @@ import './MarketplaceView.css';
 
 export const MarketplaceView: React.FC = () => {
     const { core } = useStore();
-    const { registry } = useStore(state => state.marketplace);
-    const { selectedIndex, selectedIntegrationId } = useStore(state => state.ui);
+    const registry = useStore(state => state.marketplace?.registry) ?? [];
+    const { selectedIndex, selectedIntegrationId } = useStore(state => state.ui) ?? {};
 
     return (
         <div className="scroll-content integrations-view">

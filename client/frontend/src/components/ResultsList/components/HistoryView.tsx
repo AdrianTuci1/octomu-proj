@@ -12,8 +12,8 @@ interface HistoryViewProps {
 
 export const HistoryView: React.FC<HistoryViewProps> = ({ filteredResults }) => {
     const { core } = useStore();
-    const { selectedIndex, typingQuery } = useStore(state => state.ui);
-    const { chatSessions } = useStore(state => state.chat);
+    const { selectedIndex, typingQuery } = useStore(state => state.ui) ?? {};
+    const chatSessions = useStore(state => state.chat?.chatSessions) ?? [];
 
     // Filter out welcome walkthrough from history view
     const historyResults = useMemo(() => {
@@ -21,7 +21,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ filteredResults }) => 
     }, [filteredResults]);
 
     const hasResults = historyResults.length > 0;
-    const hasChatSessions = typingQuery.trim() === '' && chatSessions.length > 0;
+    const hasChatSessions = (typingQuery ?? '').trim() === '' && chatSessions.length > 0;
     const showEmptyState = !hasResults && !hasChatSessions;
 
     return (

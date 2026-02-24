@@ -14,8 +14,10 @@ export class CommandManager {
 
     async handleChatSubmit() {
         const state = this.store.getState();
-        const { query, activeMentions } = state.ui;
-        const { chat, navigation } = state.core;
+        const query = state.ui?.query ?? '';
+        const activeMentions = state.ui?.activeMentions ?? [];
+        const chat = state.core?.chat;
+        const navigation = state.core?.navigation;
 
         if (!query.trim() && activeMentions.length === 0) return;
 
@@ -50,10 +52,10 @@ export class CommandManager {
 
     async executeCommand() {
         const state = this.store.getState();
-        const { pendingCommand } = state.command;
-        const { chat } = state.core;
+        const pendingCommand = state.command?.pendingCommand;
+        const chat = state.core?.chat;
 
-        if (!pendingCommand) return;
+        if (!pendingCommand || !chat) return;
 
         chat.addMessage({
             id: Date.now().toString(),

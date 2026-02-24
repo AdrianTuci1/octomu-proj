@@ -3,6 +3,8 @@
 
 export function CheckBinary(arg1:string):Promise<boolean>;
 
+export function ClosePanel():Promise<void>;
+
 export function DeleteCredential(arg1:string):Promise<void>;
 
 export function DownloadBinary(arg1:string,arg2:string):Promise<string>;
@@ -28,6 +30,10 @@ export function ListTools(arg1:string,arg2:string,arg3:string):Promise<string>;
 export function ListToolsRemote(arg1:string,arg2:string,arg3:string):Promise<string>;
 
 export function OpenOAuthBrowser(arg1:string):Promise<void>;
+
+export function OpenOnboarding():Promise<void>;
+
+export function OpenSettings():Promise<void>;
 
 export function SaveCredential(arg1:string,arg2:string):Promise<void>;
 

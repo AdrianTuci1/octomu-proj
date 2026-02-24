@@ -6,8 +6,10 @@ import './ChatView.css';
 
 export const ChatView: React.FC = () => {
     const { core } = useStore();
-    const { conversation } = useStore(state => state.chat);
-    const { pendingCommand, allowTool, rejectCommand } = useStore(state => state.command);
+    const conversation = useStore(state => state.chat?.conversation) ?? [];
+    const pendingCommand = useStore(state => state.command?.pendingCommand);
+    const allowTool = useStore(state => state.command?.allowTool);
+    const rejectCommand = useStore(state => state.command?.rejectCommand);
 
     const scrollRef = React.useRef<HTMLDivElement>(null);
 

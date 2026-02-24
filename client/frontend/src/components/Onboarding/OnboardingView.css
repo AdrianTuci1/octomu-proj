@@ -1,0 +1,357 @@
+.onboarding-view {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #1c1c1c;
+    color: #fff;
+    padding: 24px;
+}
+
+.onboarding-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.skip-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.skip-btn:hover {
+    color: #fff;
+}
+
+.onboarding-progress {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.progress-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #333;
+    transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+    background: #007aff;
+    transform: scale(1.2);
+}
+
+.progress-dot.completed {
+    background: #007aff;
+}
+
+.onboarding-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Welcome Step */
+.onboarding-welcome {
+    max-width: 500px;
+}
+
+.welcome-icon {
+    color: #007aff;
+    margin-bottom: 24px;
+}
+
+.onboarding-welcome h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.onboarding-welcome p {
+    color: #888;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.welcome-features {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.feature-icon {
+    font-size: 32px;
+}
+
+.feature-item span:last-child {
+    font-size: 13px;
+    color: #888;
+}
+
+/* Shortcuts Step */
+.onboarding-shortcuts {
+    max-width: 500px;
+}
+
+.onboarding-shortcuts h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.onboarding-shortcuts > p {
+    color: #888;
+    margin-bottom: 32px;
+}
+
+.shortcuts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 20px;
+    background: #252525;
+    border-radius: 8px;
+}
+
+.shortcut-item kbd {
+    background: #333;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 28px;
+    text-align: center;
+}
+
+.shortcut-item span {
+    margin-left: auto;
+    color: #ccc;
+    font-size: 14px;
+}
+
+/* AI Step */
+.onboarding-ai {
+    max-width: 500px;
+}
+
+.onboarding-ai h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.onboarding-ai > p {
+    color: #888;
+    margin-bottom: 32px;
+}
+
+.ai-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ai-option {
+    background: #252525;
+    padding: 16px 20px;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.ai-option-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.ai-option-header .check-icon {
+    color: #007aff;
+}
+
+.ai-option-header span {
+    font-weight: 500;
+}
+
+.ai-option p {
+    color: #888;
+    font-size: 13px;
+    margin: 0;
+    padding-left: 28px;
+}
+
+/* Cloud Step */
+.onboarding-cloud {
+    max-width: 500px;
+}
+
+.onboarding-cloud h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.onboarding-cloud > p {
+    color: #888;
+    margin-bottom: 24px;
+}
+
+.cloud-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+.benefit-item svg {
+    color: #007aff;
+}
+
+.cloud-cta {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+/* Complete Step */
+.onboarding-complete {
+    max-width: 500px;
+}
+
+.complete-icon {
+    color: #34c759;
+    margin-bottom: 24px;
+}
+
+.onboarding-complete h2 {
+    font-size: 28px;
+    margin-bottom: 16px;
+}
+
+.onboarding-complete > p {
+    color: #888;
+    margin-bottom: 24px;
+}
+
+.complete-tips {
+    background: #252525;
+    padding: 16px 24px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+}
+
+.complete-tips p {
+    color: #888;
+    font-size: 14px;
+    margin: 0;
+}
+
+.complete-tips kbd {
+    background: #333;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #007aff;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #0066d6;
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #888;
+    border: 1px solid #333;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #252525;
+    color: #fff;
+}
+
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-large {
+    padding: 16px 40px;
+    font-size: 16px;
+}
+
+/* Footer */
+.onboarding-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 24px;
+    border-top: 1px solid #333;
+    margin-top: auto;
+}
+
+/* Panel Container */
+.panel-container {
+    width: 100%;
+    height: 100vh;
+    background: #1c1c1c;
+}
