@@ -1,65 +1,81 @@
 package main
 
 import (
-	"context"
 	"embed"
+	_ "embed"
+	"log"
 
-	"github.com/wailsapp/wails/v2"
-	"github.com/wailsapp/wails/v2/pkg/options"
-	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
-	"github.com/wailsapp/wails/v2/pkg/options/mac"
+	"client/backend"
+	"client/windows"
+
+	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/wailsapp/wails/v3/pkg/events"
+	"golang.design/x/hotkey"
 )
 
 //go:embed all:frontend/dist
 var assets embed.FS
 
-var globalApp *App
+var (
+	mainWindow       *application.WebviewWindow
+	settingsWindow   *application.WebviewWindow
+	onboardingWindow *application.WebviewWindow
+	globalApp        *App
+)
 
 func main() {
-	// Create an instance of the app structure
-	globalApp = NewApp()
-
-	// Create application with options
-	err := wails.Run(&options.App{
-		Title:             "Octomus client",
-		Width:             750,
-		Height:            450,
-		DisableResize:      true,
-		Fullscreen:         false,
-		Frameless:          true,
-		AlwaysOnTop:        true,
-		AssetServer: &assetserver.Options{
-			Assets: assets,
+	app := application.New(application.Options{
+		Name:        "Octomus",
+		Description: "Octomus Desktop client",
+		Assets: application.AssetOptions{
+			Handler: application.AssetFileServerFS(assets),
 		},
-		BackgroundColour: &options.RGBA{R: 0, G: 0, B: 0, A: 0},
-		StartHidden:      true,
-		OnStartup: func(ctx context.Context) {
-			globalApp.startup(ctx)
-			setupTray()
-		},
-		Bind: []interface{}{
-			globalApp,
-		},
-		Mac: &mac.Options{
-			TitleBar: &mac.TitleBar{
-				TitlebarAppearsTransparent: true,
-				HideTitle:                  true,
-				HideTitleBar:               true,
-				FullSizeContent:            true,
-				UseToolbar:                 false,
-				HideToolbarSeparator:       true,
-			},
-			Appearance:           mac.NSAppearanceNameDarkAqua,
-			WebviewIsTransparent: true,
-			WindowIsTranslucent:  true,
-			About: &mac.AboutInfo{
-				Title:   "Octomus client",
-				Message: "Octomus Desktop client",
-			},
+		Mac: application.MacOptions{
+			ActivationPolicy: application.ActivationPolicyAccessory,
 		},
 	})
 
+	// Create Windows
+	mainWindow = windows.CreateMainWindow(app)
+	settingsWindow = windows.CreateSettingsWindow(app)
+	onboardingWindow = windows.CreateOnboardingWindow(app)
+
+	// Create and Bind App
+	globalApp = NewApp(app)
+	app.RegisterService(application.NewService(globalApp))
+
+	app.Event.OnApplicationEvent(events.Mac.ApplicationDidFinishLaunching, func(event *application.ApplicationEvent) {
+		// Register global shortcut
+		go func() {
+			hk := hotkey.New([]hotkey.Modifier{hotkey.ModOption}, hotkey.KeySpace)
+			err := hk.Register()
+			if err != nil {
+				log.Printf("Failed to register global hotkey: %v", err)
+				return
+			}
+			for {
+				<-hk.Keydown()
+				application.InvokeSync(func() {
+					globalApp.ToggleWindow()
+				})
+			}
+		}()
+	})
+
+	mainWindow.OnWindowEvent(events.Mac.WindowDidResignKey, func(event *application.WindowEvent) {
+		mainWindow.Hide()
+	})
+
+	// Show Onboarding first if not completed
+	onboardingDone, _ := backend.GetCredential("onboarding_completed")
+	if onboardingDone != "true" {
+		onboardingWindow.Show()
+	} else {
+		mainWindow.Show()
+	}
+
+	err := app.Run()
 	if err != nil {
-		println("Error:", err.Error())
+		log.Fatal(err)
 	}
 }

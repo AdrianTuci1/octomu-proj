@@ -4,7 +4,7 @@ import { Settings, Puzzle, Sparkles, Zap, User, Cloud, Shield, Info, X } from 'l
 import { GeneralSettings } from './tabs/GeneralSettings';
 import { AISettings } from './tabs/AISettings';
 import { ExtensionSettings } from './tabs/ExtensionSettings';
-import { EventsEmit } from '../../../wailsjs/runtime/runtime';
+import { Events } from '@wailsio/runtime';
 import './SettingsView.css';
 
 export const SettingsView: React.FC = () => {
@@ -33,7 +33,7 @@ export const SettingsView: React.FC = () => {
 
     const handleClose = () => {
         // Emit event to close the panel and return to compact mode
-        EventsEmit('octomus:close-panel');
+        Events.Emit('octomus:close-panel');
     };
 
     return (

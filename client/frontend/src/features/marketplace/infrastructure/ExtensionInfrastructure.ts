@@ -1,6 +1,6 @@
 import { MCPService } from '../../../services/MCPService';
 import { MCPRuntimeService } from '../../../services/MCPRuntimeService';
-import { CheckBinary } from '../../../../wailsjs/go/main/App';
+import { CheckBinary, StopBinary } from '../../../../bindings/client/app';
 import { IMCPRegistryItem } from '../../../domain/types';
 
 export interface IExtensionInfrastructure {
@@ -55,9 +55,7 @@ export class ExtensionInfrastructure implements IExtensionInfrastructure {
     }
 
     async stopProcess(id: string) {
-        if ((window as any).go?.main?.App?.StopBinary) {
-            await (window as any).go.main.App.StopBinary(id);
-        }
+        await StopBinary(id);
     }
 
     async startOAuthFlow(url: string) {

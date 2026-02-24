@@ -1,4 +1,5 @@
 import { AppState } from '../../../store/storeTypes';
+import { SaveCredential } from '../../../../bindings/client/app';
 
 export interface ISettingsStore {
     getState(): AppState;
@@ -36,5 +37,15 @@ export class SettingsManager {
 
     setActiveSettingsTab(tab: 'general' | 'extensions' | 'ai' | 'advanced') {
         this.setSettingsState({ activeSettingsTab: tab });
+    }
+
+    async setOnboardingCompleted(completed: boolean) {
+        this.setSettingsState({ onboardingCompleted: completed });
+        // Sync with backend keychain
+        try {
+            await SaveCredential("onboarding_completed", completed ? "true" : "false");
+        } catch (err) {
+            console.error('[SettingsManager] Failed to save onboarding status:', err);
+        }
     }
 }

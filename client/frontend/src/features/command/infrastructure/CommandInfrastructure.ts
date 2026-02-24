@@ -1,4 +1,4 @@
-import { ExecuteSystemCommand } from '../../../../wailsjs/go/main/App';
+import { ExecuteSystemCommand } from '../../../../bindings/client/app';
 
 export interface ICommandInfrastructure {
     executeSystemCommand(command: string, args: string[]): Promise<string>;

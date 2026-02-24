@@ -8,6 +8,7 @@ export interface SettingsState {
     launchAtLogin: boolean;
     textSize: 'small' | 'large';
     activeSettingsTab: 'general' | 'extensions' | 'ai' | 'advanced';
+    onboardingCompleted: boolean;
 }
 
 export const createSettingsSlice: StateCreator<AppState, [], [], SettingsState> = (set) => ({
@@ -17,4 +18,5 @@ export const createSettingsSlice: StateCreator<AppState, [], [], SettingsState> 
     launchAtLogin: true,
     textSize: 'small',
     activeSettingsTab: 'general',
+    onboardingCompleted: false,
 });
