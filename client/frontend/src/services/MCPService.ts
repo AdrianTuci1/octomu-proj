@@ -1,35 +1,6 @@
 import { ApiService } from './ApiService';
 import { IMCPRegistryItem } from '../domain/types';
-
-// Wails generated bindings (auto-generated from Go exported methods on App struct)
-// These are available at runtime as window.go.main.App.*
-declare const window: Window & {
-    go: {
-        main: {
-            App: {
-                // Local binary MCP
-                ListTools(mcpId: string, apiKey: string, envVarName: string): Promise<string>;
-                ExecuteBinary(mcpId: string, toolName: string, args: Record<string, unknown>, apiKey: string, envVarName: string): Promise<string>;
-                CheckBinary(mcpId: string): Promise<boolean>;
-                DownloadBinary(mcpId: string, url: string): Promise<string>;
-
-                // Remote HTTP MCP
-                ListToolsRemote(mcpId: string, endpoint: string, token: string): Promise<string>;
-                ExecuteRemoteTool(mcpId: string, endpoint: string, token: string, toolName: string, args: Record<string, unknown>): Promise<string>;
-
-                // macOS Keychain
-                SaveCredential(key: string, value: string): Promise<void>;
-                GetCredential(key: string): Promise<string>;
-                HasCredential(key: string): Promise<boolean>;
-                DeleteCredential(key: string): Promise<void>;
-
-                // OAuth
-                OpenOAuthBrowser(url: string): Promise<void>;
-                ExchangeToken(mcpId: string, tokenUrl: string, clientId: string, clientSecret: string, scopes: string[]): Promise<string>;
-            };
-        };
-    };
-};
+import * as App from '../../bindings/client/app';
 
 
 export interface IMCPToolsResponse {
@@ -104,7 +75,7 @@ export class MCPService extends ApiService {
         clientSecret: string,
         scopes: string[] = []
     ): Promise<string> {
-        return window.go.main.App.ExchangeToken(mcpId, tokenUrl, clientId, clientSecret, scopes);
+        return App.ExchangeToken(mcpId, tokenUrl, clientId, clientSecret, scopes);
     }
 
 
@@ -114,35 +85,35 @@ export class MCPService extends ApiService {
      * which is intercepted by the Wails URL scheme handler.
      */
     static async openOAuthBrowser(authUrl: string): Promise<void> {
-        return window.go.main.App.OpenOAuthBrowser(authUrl);
+        return App.OpenOAuthBrowser(authUrl);
     }
 
     // ── Keychain (macOS Keychain via security CLI) ───────────────────────────
 
     /** Save a credential (token, API key) to macOS Keychain */
     static async saveCredential(key: string, value: string): Promise<void> {
-        return window.go.main.App.SaveCredential(key, value);
+        return App.SaveCredential(key, value);
     }
 
     /** Retrieve a credential from macOS Keychain. Returns '' if not found. */
     static async getCredential(key: string): Promise<string> {
-        return window.go.main.App.GetCredential(key);
+        return App.GetCredential(key);
     }
 
     /** Check if a credential exists in Keychain */
     static async hasCredential(key: string): Promise<boolean> {
-        return window.go.main.App.HasCredential(key);
+        return App.HasCredential(key);
     }
 
     /** Remove a credential from Keychain */
     static async deleteCredential(key: string): Promise<void> {
-        return window.go.main.App.DeleteCredential(key);
+        return App.DeleteCredential(key);
     }
 
     // ── Local Binary MCP (stdio JSON-RPC) ───────────────────────────────────
 
     static async listLocalTools(mcpId: string, apiKey: string, envVarName: string): Promise<string> {
-        return window.go.main.App.ListTools(mcpId, apiKey, envVarName);
+        return App.ListTools(mcpId, apiKey, envVarName);
     }
 
     static async executeLocalTool(
@@ -152,15 +123,15 @@ export class MCPService extends ApiService {
         apiKey: string,
         envVarName: string,
     ): Promise<string> {
-        return window.go.main.App.ExecuteBinary(mcpId, toolName, args, apiKey, envVarName);
+        return App.ExecuteBinary(mcpId, toolName, args, apiKey, envVarName);
     }
 
     static async checkBinary(mcpId: string): Promise<boolean> {
-        return window.go.main.App.CheckBinary(mcpId);
+        return App.CheckBinary(mcpId);
     }
 
     static async downloadBinary(mcpId: string, url: string): Promise<string> {
-        return window.go.main.App.DownloadBinary(mcpId, url);
+        return App.DownloadBinary(mcpId, url);
     }
 
     // ── Remote HTTP MCP (HTTP JSON-RPC with Bearer token) ───────────────────
@@ -170,7 +141,7 @@ export class MCPService extends ApiService {
      * Token is read from Keychain if empty string is passed.
      */
     static async listRemoteTools(mcpId: string, endpoint: string, token = ''): Promise<string> {
-        return window.go.main.App.ListToolsRemote(mcpId, endpoint, token);
+        return App.ListToolsRemote(mcpId, endpoint, token);
     }
 
     /**
@@ -184,7 +155,7 @@ export class MCPService extends ApiService {
         toolName: string,
         args: Record<string, unknown>,
     ): Promise<string> {
-        return window.go.main.App.ExecuteRemoteTool(mcpId, endpoint, token, toolName, args);
+        return App.ExecuteRemoteTool(mcpId, endpoint, token, toolName, args);
     }
 
     // ── Unified dispatch helpers ─────────────────────────────────────────────

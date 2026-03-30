@@ -4,7 +4,9 @@ import { Settings, Puzzle, Sparkles, Zap, User, Cloud, Shield, Info, X } from 'l
 import { GeneralSettings } from './tabs/GeneralSettings';
 import { AISettings } from './tabs/AISettings';
 import { ExtensionSettings } from './tabs/ExtensionSettings';
-import { EventsEmit } from '../../../wailsjs/runtime/runtime';
+import { CloudSettings } from './tabs/CloudSettings';
+import { AccountSettings } from './tabs/AccountSettings';
+import { Events } from '@wailsio/runtime';
 import './SettingsView.css';
 
 export const SettingsView: React.FC = () => {
@@ -27,22 +29,24 @@ export const SettingsView: React.FC = () => {
             case 'general': return <GeneralSettings />;
             case 'ai': return <AISettings />;
             case 'extensions': return <ExtensionSettings />;
+            case 'cloud': return <CloudSettings />;
+            case 'account': return <AccountSettings />;
             default: return <div className="settings-placeholder">Settings for {activeSettingsTab} coming soon...</div>;
         }
     };
 
     const handleClose = () => {
         // Emit event to close the panel and return to compact mode
-        EventsEmit('octomus:close-panel');
+        Events.Emit('octomus:close-panel');
     };
 
     return (
         <div className="settings-panel">
             <div className="settings-window">
                 <div className="settings-header">
-                    <div className="settings-title">Octomus Settings</div>
+                    <div className="settings-title">Preferences</div>
                     <button className="close-settings" onClick={handleClose}>
-                        <X size={16} />
+                        <X size={14} />
                     </button>
                     <div className="settings-tabs">
                         {tabs.map((tab) => (
@@ -51,7 +55,7 @@ export const SettingsView: React.FC = () => {
                                 className={`settings-tab ${activeSettingsTab === tab.id ? 'active' : ''}`}
                                 onClick={() => core.settings.setActiveSettingsTab(tab.id as any)}
                             >
-                                <tab.icon size={20} />
+                                <tab.icon size={16} />
                                 <span>{tab.label}</span>
                                 {tab.badge && <span className={`tab-badge ${tab.badge === 'Pro' ? 'pro' : ''}`}>{tab.badge}</span>}
                             </button>

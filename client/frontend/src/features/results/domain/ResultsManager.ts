@@ -1,7 +1,7 @@
 import { IResultItem } from '../../../domain/types';
 import { AppState } from '../../../store/storeTypes';
 import { IResultsInfrastructure } from '../infrastructure/ResultsInfrastructure';
-import { EventsEmit } from '../../../../wailsjs/runtime/runtime';
+import { Events } from '@wailsio/runtime';
 
 export interface IResultsStore {
     getState(): AppState;
@@ -76,7 +76,7 @@ export class ResultsManager {
         const uiCommandMap: Record<string, () => void> = {
             'ui:settings': () => {
                 // Open settings in a larger panel window
-                EventsEmit('octomus:open-settings');
+                Events.Emit('octomus:open-settings');
             },
             'ui:confetti': () => console.log('Confetti!'),
             'ui:qr_code': () => {
@@ -87,7 +87,7 @@ export class ResultsManager {
                 window.dispatchEvent(new CustomEvent('octomus:qr_code'));
             },
             'ui:manage_models': () => {
-                EventsEmit('octomus:open-settings');
+                Events.Emit('octomus:open-settings');
             },
         };
 

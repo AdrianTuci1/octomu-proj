@@ -7,7 +7,8 @@ export interface SettingsState {
     hotkey: string;
     launchAtLogin: boolean;
     textSize: 'small' | 'large';
-    activeSettingsTab: 'general' | 'extensions' | 'ai' | 'advanced';
+    activeSettingsTab: 'general' | 'extensions' | 'ai' | 'cloud' | 'account' | 'organizations' | 'advanced' | 'about';
+    onboardingCompleted: boolean;
 }
 
 export const createSettingsSlice: StateCreator<AppState, [], [], SettingsState> = (set) => ({
@@ -17,4 +18,5 @@ export const createSettingsSlice: StateCreator<AppState, [], [], SettingsState> 
     launchAtLogin: true,
     textSize: 'small',
     activeSettingsTab: 'general',
+    onboardingCompleted: false,
 });

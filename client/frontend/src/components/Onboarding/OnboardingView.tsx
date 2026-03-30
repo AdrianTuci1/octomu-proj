@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../../store/useStore';
 import { ArrowRight, ArrowLeft, Sparkles, Puzzle, Cloud, Check, X } from 'lucide-react';
-import { EventsEmit } from '../../../wailsjs/runtime/runtime';
+import { Events } from '@wailsio/runtime';
 import './OnboardingView.css';
 
 interface OnboardingStep {
@@ -165,8 +165,9 @@ export const OnboardingView: React.FC = () => {
                         <p><strong>Tip:</strong> Press <kbd>⌘</kbd> + <kbd>Space</kbd> to open Octomus anytime.</p>
                     </div>
                     <button className="btn-primary btn-large" onClick={() => {
+                        core.settings.setOnboardingCompleted(true);
                         // Close the panel and return to compact mode
-                        EventsEmit('octomus:close-panel');
+                        Events.Emit('octomus:close-panel');
                     }}>
                         Start Using Octomus
                     </button>
@@ -188,8 +189,9 @@ export const OnboardingView: React.FC = () => {
     };
 
     const handleSkip = () => {
+        core.settings.setOnboardingCompleted(true);
         // Close the panel and return to compact mode
-        EventsEmit('octomus:close-panel');
+        Events.Emit('octomus:close-panel');
     };
 
     const currentStepData = steps[currentStep];

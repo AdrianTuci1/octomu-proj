@@ -1,6 +1,7 @@
 import React from 'react';
 import { useStore } from '../../../store/useStore';
 import { Search, Filter, Plus, ChevronRight } from 'lucide-react';
+import './ExtensionSettings.css';
 
 export const ExtensionSettings: React.FC = () => {
     const extensions = useStore(state => state.command?.extensions) ?? [];

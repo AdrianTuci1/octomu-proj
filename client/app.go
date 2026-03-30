@@ -8,11 +8,12 @@ import (
 	"client/backend"
 
 	"github.com/pkg/browser"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
 // App struct
 type App struct {
+	app           *application.App
 	ctx           context.Context
 	windowVisible bool
 	panelMode     bool // true when settings/onboarding are open (larger window)
@@ -22,8 +23,9 @@ type App struct {
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
+func NewApp(app *application.App) *App {
 	return &App{
+		app:           app,
 		windowVisible: true,
 		panelManager:  backend.NewPanelWindowManager(),
 	}
@@ -32,63 +34,54 @@ func NewApp() *App {
 //go:embed appicon.png
 var trayIcon []byte
 
-// startup is called when the app starts. The context is saved
-// so we can call the runtime methods
-func (a *App) startup(ctx context.Context) {
+// ServiceStartup is called when the app starts.
+func (a *App) ServiceStartup(ctx context.Context, options application.ServiceOptions) error {
 	a.ctx = ctx
 	a.mcpManager = backend.NewMCPManager(ctx)
 	a.systemService = backend.NewSystemService()
 	a.panelManager.SetContext(ctx)
-	// Global shortcut (Option + Space) is now handled natively in tray_darwin.m
-
-	// Hide window on blur (only in compact/launcher mode)
-	runtime.EventsOn(ctx, "wails:window-blur", func(data ...interface{}) {
-		if a.panelMode {
-			return // Don't hide when settings/onboarding are open
-		}
-		runtime.WindowHide(a.ctx)
-		a.windowVisible = false
-	})
 
 	// Listen for window mode changes from frontend
-	runtime.EventsOn(ctx, "octomus:window-mode", func(data ...interface{}) {
-		if len(data) > 0 {
-			if mode, ok := data[0].(string); ok {
-				a.panelMode = (mode == "panel")
-				fmt.Printf("[App] Window mode switched to: %s (panelMode=%v)\n", mode, a.panelMode)
-			}
+	a.app.Event.On("octomus:window-mode", func(event *application.CustomEvent) {
+		if mode, ok := event.Data.(string); ok {
+			a.panelMode = (mode == "panel")
+			fmt.Printf("[App] Window mode switched to: %s (panelMode=%v)\n", mode, a.panelMode)
 		}
 	})
 
 	// Listen for open settings event from frontend
-	runtime.EventsOn(ctx, "octomus:open-settings", func(data ...interface{}) {
+	a.app.Event.On("octomus:open-settings", func(event *application.CustomEvent) {
 		a.OpenSettings()
 	})
 
 	// Listen for open onboarding event from frontend
-	runtime.EventsOn(ctx, "octomus:open-onboarding", func(data ...interface{}) {
+	a.app.Event.On("octomus:open-onboarding", func(event *application.CustomEvent) {
 		a.OpenOnboarding()
 	})
 
 	// Listen for close panel event from frontend
-	runtime.EventsOn(ctx, "octomus:close-panel", func(data ...interface{}) {
+	a.app.Event.On("octomus:close-panel", func(event *application.CustomEvent) {
 		a.ClosePanel()
 	})
+
+	return nil
 }
 
 // ToggleWindow hides or shows the main window
 func (a *App) ToggleWindow() {
-	if a.ctx == nil {
+	win, exists := a.app.Window.GetByName("main")
+	if !exists {
 		return
 	}
 
-	if a.windowVisible {
-		runtime.WindowHide(a.ctx)
+	if win.IsVisible() {
+		win.Hide()
 		a.windowVisible = false
 	} else {
-		runtime.WindowShow(a.ctx)
-		runtime.WindowSetAlwaysOnTop(a.ctx, true)
-		runtime.WindowCenter(a.ctx)
+		win.Show()
+		win.Focus()
+		win.SetAlwaysOnTop(true)
+		win.Center()
 		a.windowVisible = true
 	}
 }
@@ -190,27 +183,46 @@ func (a *App) GetInstalledApps() (string, error) {
 
 // OpenSettings opens the Settings panel
 func (a *App) OpenSettings() error {
-	return a.panelManager.OpenPanel(backend.PanelSettings)
+	if win, exists := a.app.Window.GetByName("main"); exists {
+		win.Hide()
+	}
+	win, exists := a.app.Window.GetByName("settings")
+	if exists {
+		win.Show()
+		win.Focus()
+	}
+	return nil
 }
 
 // OpenOnboarding opens the Onboarding panel
 func (a *App) OpenOnboarding() error {
-	return a.panelManager.OpenPanel(backend.PanelOnboarding)
+	if win, exists := a.app.Window.GetByName("main"); exists {
+		win.Hide()
+	}
+	win, exists := a.app.Window.GetByName("onboarding")
+	if exists {
+		win.Show()
+		win.Focus()
+	}
+	return nil
 }
 
-// ClosePanel closes the current panel and returns to compact mode
+// ClosePanel closes the current panel (this might be called from a panel window)
 func (a *App) ClosePanel() error {
-	err := a.panelManager.ClosePanel()
-	if err != nil {
-		return err
+	// In v3 with multiple windows, "ClosePanel" likely means close the active panel window
+	// If called from frontend, we need to know WHICH window called it or just close both possible panels
+	if win, exists := a.app.Window.GetByName("settings"); exists {
+		win.Hide()
+	}
+	if win, exists := a.app.Window.GetByName("onboarding"); exists {
+		win.Hide()
 	}
 
-	// Reset window to compact launcher size
-	runtime.WindowSetSize(a.ctx, 750, 450)
-	runtime.WindowSetAlwaysOnTop(a.ctx, true)
-	runtime.WindowCenter(a.ctx)
-	a.panelMode = false
-	a.windowVisible = true
+	// Ensure main window is still healthy/visible if needed
+	if win, exists := a.app.Window.GetByName("main"); exists {
+		win.Show()
+		win.Focus()
+	}
 
 	return nil
 }

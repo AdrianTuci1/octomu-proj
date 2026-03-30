@@ -1,0 +1,166 @@
+.cloud-settings-container {
+    display: flex;
+    padding: 60px 40px;
+    gap: 60px;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.cloud-hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 320px;
+}
+
+.cloud-icon-hero {
+    width: 64px;
+    height: 64px;
+    color: var(--settings-text-secondary);
+    margin-bottom: 24px;
+    opacity: 0.8;
+}
+
+.cloud-hero h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--settings-text-primary);
+}
+
+.cloud-hero p {
+    font-size: 14px;
+    color: var(--settings-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+/* Toggle Switch Style */
+.cloud-toggle {
+    appearance: none;
+    width: 50px;
+    height: 26px;
+    background: var(--settings-control-bg);
+    border-radius: 13px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid var(--settings-border);
+}
+
+.cloud-toggle:checked {
+    background: var(--settings-accent);
+}
+
+.cloud-toggle::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: all 0.2s ease;
+}
+
+.cloud-toggle:checked::before {
+    left: 26px;
+}
+
+.pro-promo-card {
+    margin-top: auto;
+    background: var(--settings-control-bg);
+    border: 1px solid var(--settings-border);
+    border-radius: 12px;
+    padding: 16px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pro-promo-card:hover {
+    background: var(--settings-hover);
+}
+
+.pro-promo-content {
+    flex: 1;
+    text-align: left;
+}
+
+.pro-promo-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--settings-text-primary);
+    margin-bottom: 2px;
+}
+
+.pro-promo-subtitle {
+    font-size: 11px;
+    color: var(--settings-text-secondary);
+}
+
+.cloud-lists {
+    flex: 2;
+    display: flex;
+    gap: 40px;
+}
+
+.cloud-list-section {
+    flex: 1;
+}
+
+.cloud-list-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--settings-text-secondary);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cloud-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.cloud-list-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--settings-border);
+    gap: 12px;
+    font-size: 13px;
+    color: var(--settings-text-primary);
+}
+
+.cloud-list-item:last-child {
+    border-bottom: none;
+}
+
+.cloud-list-item .icon {
+    width: 16px;
+    height: 16px;
+    color: var(--settings-text-secondary);
+}
+
+.cloud-list-item .info-icon {
+    margin-left: auto;
+    width: 14px;
+    height: 14px;
+    color: var(--settings-text-secondary);
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.cloud-list-item span {
+    font-weight: 500;
+}

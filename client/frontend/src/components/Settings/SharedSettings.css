@@ -1,0 +1,64 @@
+:root {
+    --settings-bg: #161616;
+    --settings-sidebar-bg: rgba(255, 255, 255, 0.02);
+    --settings-border: rgba(255, 255, 255, 0.08);
+    --settings-text-primary: #ffffff;
+    --settings-text-secondary: #8a8a8e;
+    --settings-accent: #007aff;
+    --settings-hover: rgba(255, 255, 255, 0.05);
+    --settings-control-bg: rgba(255, 255, 255, 0.05);
+}
+
+/* Common Controls for all tabs */
+.settings-description {
+    font-size: 12px;
+    color: var(--settings-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.settings-select,
+.settings-input {
+    background: var(--settings-control-bg);
+    border: 1px solid var(--settings-border);
+    color: var(--settings-text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 100%;
+    max-width: 300px;
+    cursor: pointer;
+}
+
+.settings-input {
+    cursor: text;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--settings-text-secondary);
+}
+
+.checkbox-row input {
+    accent-color: var(--settings-accent);
+}
+
+.hotkey-record {
+    background: var(--settings-control-bg);
+    border: 1px solid var(--settings-border);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--settings-text-secondary);
+    cursor: pointer;
+    width: fit-content;
+}
+
+.hotkey-record:hover {
+    background: var(--settings-hover);
+    color: var(--settings-text-primary);
+}

@@ -1,9 +1,7 @@
 import {
-    WindowSetSize,
-    WindowCenter,
-    WindowSetAlwaysOnTop,
-    EventsEmit
-} from '../../../../wailsjs/runtime/runtime';
+    Window,
+    Events
+} from '@wailsio/runtime';
 
 export type WindowLayout = 'compact' | 'panel';
 
@@ -34,12 +32,12 @@ export class WindowService {
 
         const config = LAYOUTS[layout];
 
-        WindowSetSize(config.width, config.height);
-        WindowCenter();
-        WindowSetAlwaysOnTop(config.alwaysOnTop);
+        Window.SetSize(config.width, config.height);
+        Window.Center();
+        Window.SetAlwaysOnTop(config.alwaysOnTop);
 
         // Tell the Go backend whether to hide on blur
-        EventsEmit('octomus:window-mode', layout);
+        Events.Emit('octomus:window-mode', layout);
 
         this.currentLayout = layout;
     }

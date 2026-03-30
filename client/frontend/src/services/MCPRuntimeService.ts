@@ -1,4 +1,4 @@
-import { ExecuteBinary, ListTools, ExecuteRemoteTool } from '../../wailsjs/go/main/App';
+import { ExecuteBinary, ListTools, ExecuteRemoteTool } from '../../bindings/client/app';
 
 export class MCPRuntimeService {
     /**

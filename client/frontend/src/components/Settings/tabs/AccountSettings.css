@@ -1,0 +1,149 @@
+.account-settings-container {
+    display: flex;
+    padding: 60px 40px;
+    gap: 60px;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.account-hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 320px;
+}
+
+.account-icon-hero {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid var(--settings-border);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.account-icon-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+}
+
+.account-hero h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--settings-text-primary);
+}
+
+.account-hero p {
+    font-size: 14px;
+    color: var(--settings-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.btn-signup {
+    background: var(--settings-control-bg);
+    border: 1px solid var(--settings-border);
+    color: var(--settings-text-primary);
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-signup:hover {
+    background: var(--settings-hover);
+}
+
+.btn-login {
+    background: transparent;
+    border: none;
+    color: var(--settings-text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    opacity: 0.8;
+}
+
+.account-lists {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.account-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--settings-text-secondary);
+    margin-bottom: 12px;
+}
+
+.account-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.account-list-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--settings-border);
+    gap: 12px;
+    font-size: 13px;
+    color: var(--settings-text-primary);
+}
+
+.account-list-item:last-child {
+    border-bottom: none;
+}
+
+.account-list-item .icon {
+    width: 16px;
+    height: 16px;
+    color: var(--settings-text-secondary);
+}
+
+.pro-tag {
+    background: rgba(0, 122, 255, 0.1);
+    color: var(--settings-accent);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: auto;
+}
+
+.info-btn {
+    width: 14px;
+    height: 14px;
+    color: var(--settings-text-secondary);
+    opacity: 0.5;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.info-btn:hover {
+    opacity: 1;
+}
