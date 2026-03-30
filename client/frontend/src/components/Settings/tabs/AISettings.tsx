@@ -1,6 +1,7 @@
 import React from 'react';
 import { useStore } from '../../../store/useStore';
 import { Sparkles, Info, Globe } from 'lucide-react';
+import './AISettings.css';
 
 export const AISettings: React.FC = () => {
     return (

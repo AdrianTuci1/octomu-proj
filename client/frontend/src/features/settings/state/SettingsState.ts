@@ -7,7 +7,7 @@ export interface SettingsState {
     hotkey: string;
     launchAtLogin: boolean;
     textSize: 'small' | 'large';
-    activeSettingsTab: 'general' | 'extensions' | 'ai' | 'advanced';
+    activeSettingsTab: 'general' | 'extensions' | 'ai' | 'cloud' | 'account' | 'organizations' | 'advanced' | 'about';
     onboardingCompleted: boolean;
 }
 
